@@ -1,3 +1,4 @@
+import AuthProvider from '@/components/auth/auth-provider'
 import { Nav } from '@/components/nav'
 import type { Metadata } from 'next'
 import './globals.css'
@@ -10,12 +11,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang='en'>
-			{/* <AuthProvider> */}
-			<body className='bg-amber-50 text-gray-800'>
-				<Nav />
-				{children}
-			</body>
-			{/* </AuthProvider> */}
+			<AuthProvider>
+				<body className='bg-amber-50 text-amber-950'>
+					<Nav />
+					<div className='mx-auto max-w-7xl'>{children}</div>
+				</body>
+			</AuthProvider>
 		</html>
 	)
 }
