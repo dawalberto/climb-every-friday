@@ -1,5 +1,4 @@
-import AuthProvider from '@/components/auth/auth-provider'
-import { Nav } from '@/components/nav'
+import { AuthProvider, Nav } from '@/components'
 import { khandFont } from '@/utils/constants'
 import type { Metadata } from 'next'
 import './globals.css'

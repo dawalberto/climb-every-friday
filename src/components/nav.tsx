@@ -21,7 +21,7 @@ export const Nav = () => {
 						<Link
 							key={path}
 							href={path}
-							className={clsx(interFont.className, 'hover:scale-105')}
+							className={clsx(interFont.className, navItemAnimationStyle)}
 						>
 							{path === '/' ? <GiMountaintop className='h-10 w-10' /> : name}
 						</Link>
@@ -38,7 +38,8 @@ export const Nav = () => {
 									onClick={() => route.push('/user')}
 									className={clsx(
 										interFont.className,
-										'flex items-center space-x-2 px-2 py-1 hover:scale-105'
+										navItemAnimationStyle,
+										'flex items-center space-x-2 px-2 py-1'
 									)}
 								>
 									<span>🦊</span>
@@ -50,7 +51,8 @@ export const Nav = () => {
 									onClick={() => signOut()}
 									className={clsx(
 										interFont.className,
-										'flex items-center space-x-2 px-2 py-1 hover:scale-105'
+										navItemAnimationStyle,
+										'flex items-center space-x-2 px-2 py-1'
 									)}
 								>
 									<PiSignOut className='h-5 w-5' />
@@ -64,3 +66,5 @@ export const Nav = () => {
 		</header>
 	)
 }
+
+const navItemAnimationStyle = 'transition-transform duration-200 hover:scale-105 active:scale-95'
