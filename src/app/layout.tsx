@@ -1,5 +1,6 @@
 import AuthProvider from '@/components/auth/auth-provider'
 import { Nav } from '@/components/nav'
+import { khandFont } from '@/utils/constants'
 import type { Metadata } from 'next'
 import './globals.css'
 
@@ -10,11 +11,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang='en'>
+		<html lang='en' className={khandFont.className}>
 			<AuthProvider>
 				<body className='bg-amber-50 text-amber-950'>
 					<Nav />
-					<div className='mx-auto max-w-7xl'>{children}</div>
+					<div className='mx-auto max-w-7xl px-4 pt-3'>{children}</div>
 				</body>
 			</AuthProvider>
 		</html>
