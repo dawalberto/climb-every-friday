@@ -40,7 +40,9 @@ const handler = NextAuth({
 							return foundUser
 						}
 					}
-				} catch (error) {}
+				} catch (error) {
+					console.log('🦊 error', error)
+				}
 				return null
 			},
 		}),
@@ -50,7 +52,7 @@ const handler = NextAuth({
 			if (account?.provider === 'credentials') return true
 			return false
 		},
-		async jwt({ token, user, account, profile }) {
+		async jwt({ token, user }) {
 			if (user) {
 				token.id = user.id
 				token.role = (user as User).role

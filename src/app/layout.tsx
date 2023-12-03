@@ -1,5 +1,5 @@
 import { AuthProvider, Nav } from '@/components'
-import { khandFont } from '@/utils/constants'
+import { khandFont } from '@/lib/constants'
 import type { Metadata } from 'next'
 import './globals.css'
 
