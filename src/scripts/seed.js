@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { db } = require('@vercel/postgres')
 
 async function seedUsers(client) {

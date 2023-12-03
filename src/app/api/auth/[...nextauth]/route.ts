@@ -34,14 +34,15 @@ const handler = NextAuth({
 						)
 
 						if (match) {
-							const authorizedUser: any = { ...foundUser }
+							const authorizedUser = { ...foundUser }
 							delete authorizedUser.password
 
-							authorizedUser.role = 'admin'
 							return foundUser
 						}
 					}
-				} catch (error) {}
+				} catch (error) {
+					console.log('🦊 error', error)
+				}
 				return null
 			},
 		}),
@@ -51,17 +52,20 @@ const handler = NextAuth({
 			if (account?.provider === 'credentials') return true
 			return false
 		},
-		async jwt({ token, user, account, profile }) {
+		async jwt({ token, user }) {
 			if (user) {
 				token.id = user.id
+				token.role = (user as User).role
 			}
 			return token
 		},
-		// async authorized(params) {
-		// 	return true
-		// },
 		async session({ session, token }) {
-			if (session?.user) (session.user as any).role = token.role
+			if (session?.user && token?.id) {
+				const userSession = { ...session.user } as User
+				userSession.id = token.id as string
+				userSession.role = (token.role as string) ?? ''
+				session.user = userSession
+			}
 			return session
 		},
 	},
