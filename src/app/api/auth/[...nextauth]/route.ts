@@ -41,7 +41,7 @@ const handler = NextAuth({
 						}
 					}
 				} catch (error) {
-					console.log('🦊 error', error)
+					console.log('🦍 error', error)
 				}
 				return null
 			},

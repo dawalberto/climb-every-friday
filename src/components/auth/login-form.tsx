@@ -33,14 +33,14 @@ export default function LoginForm({ users }: { users: User[] }) {
 				setFormState({
 					state: 'error',
 					error: 'credentials',
-					message: '🦊 Uppss wrong password',
+					message: '🦍 Uppss wrong password',
 				})
 			}
 		} catch (error) {
 			setFormState({
 				state: 'error',
 				error: 'unknown',
-				message: '🦊 Uppss something went wrong',
+				message: '🦍 Uppss something went wrong',
 			})
 		}
 	}
