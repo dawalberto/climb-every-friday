@@ -15,7 +15,7 @@ async function seedUsers(client) {
 			created_at TIMESTAMP NOT NULL DEFAULT NOW()
 		);
 		`
-		console.log(`🦍 Created "users" table`)
+		console.log(`🦍 ✅ - Created "users" table`)
 
 		return {
 			createTable,
@@ -30,7 +30,7 @@ async function seedLocations(client) {
 	try {
 		await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`
 		// Create the "locations" table if it doesn't exist
-		const createTable = await client.sql`
+		await client.sql`
         CREATE TABLE IF NOT EXISTS locations (
             id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
             name VARCHAR(255) NOT NULL UNIQUE,
@@ -39,20 +39,22 @@ async function seedLocations(client) {
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
 		);
       	`
-		console.log(`🦍 Created "locations" table`)
+		console.log(`🦍 ✅ - Created "locations" table`)
 
 		const { rowCount } = await client.sql`SELECT * FROM locations WHERE menu_href = '/villena'`
 		if (rowCount === 0) {
+			const { rowCount: locationFound } =
+				await client.sql`SELECT 1 FROM locations WHERE menu_href = '/villena'`
+			if (locationFound) {
+				console.log(`🦍 ❌ - Location 'Villena' already exists`)
+				return
+			}
+
 			await client.sql`
 				INSERT INTO locations (name, menu_href, location_link) 
 				VALUES ('Villena', '/villena', 'https://maps.app.goo.gl/P47ZNkffrhhSAtfWA')
-				ON CONFLICT (menu_href) DO NOTHING
 			`
-			console.log(`🦍 Location 'Villena' created`)
-		}
-
-		return {
-			createTable,
+			console.log(`🦍 ✅ - Location 'Villena' created`)
 		}
 	} catch (error) {
 		console.error('Error seeding locations:', error)
@@ -64,7 +66,7 @@ async function seedPlaces(client) {
 	try {
 		await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`
 		// Create the "places" table if it doesn't exist
-		const createTable = await client.sql`
+		await client.sql`
         CREATE TABLE IF NOT EXISTS places (
             id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -75,20 +77,23 @@ async function seedPlaces(client) {
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
 		);
       	`
-		console.log(`🦍 Created "places" table`)
+		console.log(`🦍 ✅ - Created "places" table`)
 
 		const { rows } = await client.sql`SELECT id FROM locations WHERE menu_href = '/villena'`
 		if (rows?.length) {
 			const { id } = rows[0]
+			const { rowCount: placeFound } =
+				await client.sql`SELECT 1 FROM places WHERE menu_href = '/penia-rubia'`
+			if (placeFound) {
+				console.log(`🦍 ❌ - Place 'Peña Rubia' already exists in location 'Villena'`)
+				return
+			}
+
 			await client.sql`
 				INSERT INTO places (name, menu_href, image_href, location_link, location_id)
 				VALUES ('Peña rubia', '/penia-rubia', '/places/penia-rubia.png', 'https://maps.app.goo.gl/U42GjN9ey67hx4fm6', ${id})
-				ON CONFLICT (menu_href) DO NOTHING
 			`
-			console.log(`🦍 Place "Peña Rubia" created in location 'Villena'`)
-		}
-		return {
-			createTable,
+			console.log(`🦍 ✅ - Place "Peña Rubia" created in location 'Villena'`)
 		}
 	} catch (error) {
 		console.error('Error seeding places:', error)
@@ -100,7 +105,7 @@ async function seedSectors(client) {
 	try {
 		await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`
 		// Create the "sectors" table if it doesn't exist
-		const createTable = await client.sql`
+		await client.sql`
         CREATE TABLE IF NOT EXISTS sectors (
             id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -112,20 +117,23 @@ async function seedSectors(client) {
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
 		);
       	`
-		console.log(`🦍 Created "sectors" table`)
+		console.log(`🦍 ✅ - Created "sectors" table`)
 
 		const { rows } = await client.sql`SELECT id FROM places WHERE menu_href = '/penia-rubia'`
 		if (rows?.length) {
 			const { id } = rows[0]
+			const { rowCount: sectorFound } =
+				await client.sql`SELECT 1 FROM sectors WHERE menu_href = '/competition-down'`
+			if (sectorFound) {
+				console.log(`🦍 ❌ - Sector 'Competición Down' already exists in place 'Villena'`)
+				return
+			}
+
 			await client.sql`
 				INSERT INTO sectors (name, menu_href, image_href, place_image_coordinate_x, place_image_coordinate_y, place_id)
 				VALUES ('Competición Down', '/competition-down', '/sectors/competition-down.png', 100, 100, ${id})
-				ON CONFLICT (menu_href) DO NOTHING
 			`
-			console.log(`🦍 Sector "Competición Down" created in place 'Villena'`)
-		}
-		return {
-			createTable,
+			console.log(`🦍 ✅ - Sector "Competición Down" created in place 'Villena'`)
 		}
 	} catch (error) {
 		console.error('Error seeding sectors:', error)
@@ -137,7 +145,7 @@ async function seedBoulders(client) {
 	try {
 		await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`
 		// Create the "boulders" table if it doesn't exist
-		const createTable = await client.sql`
+		await client.sql`
         CREATE TABLE IF NOT EXISTS boulders (
             id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -149,21 +157,24 @@ async function seedBoulders(client) {
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
 		);
       	`
-		console.log(`🦍 Created "boulders" table`)
+		console.log(`🦍 ✅ - Created "boulders" table`)
 
 		const { rows } =
 			await client.sql`SELECT id FROM sectors WHERE menu_href = '/competition-down'`
 		if (rows?.length) {
 			const { id } = rows[0]
+			const { rowCount: boulderFound } =
+				await client.sql`SELECT 1 FROM boulders WHERE menu_href = '/tiburon'`
+			if (boulderFound) {
+				console.log(`🦍 ❌ - Boulder 'Tiburón' already exists in sector 'Competición Down'`)
+				return
+			}
+
 			await client.sql`
 				INSERT INTO boulders (name, menu_href, image_href, sector_image_coordinate_x, sector_image_coordinate_y, sector_id)
 				VALUES ('Tiburón', '/tiburon', '/boulders/tiburon.png', 100, 100, ${id})
-				ON CONFLICT (menu_href) DO NOTHING
 			`
-			console.log(`🦍 Boulder "Tiburón" created in sector 'Peña rubia'`)
-		}
-		return {
-			createTable,
+			console.log(`🦍 ✅ - Boulder "Tiburón" created in sector 'Peña rubia'`)
 		}
 	} catch (error) {
 		console.error('Error seeding boulders:', error)
@@ -175,7 +186,7 @@ async function seedRoutes(client) {
 	try {
 		await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`
 		// Create the "routes" table if it doesn't exist
-		const createTable = await client.sql`
+		await client.sql`
         CREATE TABLE IF NOT EXISTS routes (
             id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -185,19 +196,23 @@ async function seedRoutes(client) {
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
 		);
       	`
-		console.log(`🦍 Created "routes" table`)
+		console.log(`🦍 ✅ - Created "routes" table`)
 
 		const { rows } = await client.sql`SELECT id FROM boulders WHERE menu_href = '/tiburon'`
 		if (rows?.length) {
 			const { id } = rows[0]
+			const { rowCount: routeFound } =
+				await client.sql`SELECT 1 FROM routes WHERE name = 'Calipso' AND boulder_id = ${id}`
+			if (routeFound) {
+				console.log(`🦍 ❌ - Route 'Calipso' already exists in boulder 'Tiburón'`)
+				return
+			}
+
 			await client.sql`
 				INSERT INTO routes (name, grade, star, boulder_id)
 				VALUES ('Calipso', '5+', true, ${id})
 			`
-			console.log(`🦍 Route "Calipso" created in boulder 'Tiburón'`)
-		}
-		return {
-			createTable,
+			console.log(`🦍 ✅ - Route "Calipso" created in boulder 'Tiburón'`)
 		}
 	} catch (error) {
 		console.error('Error seeding routes:', error)
@@ -221,7 +236,7 @@ async function seedImprovements(client) {
             done_at TIMESTAMP
 		);
       	`
-		console.log(`🦍 Created "improvements" table`)
+		console.log(`🦍 ✅ - Created "improvements" table`)
 
 		return {
 			createTable,
