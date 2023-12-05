@@ -1,7 +1,7 @@
 'use client'
 
-import { DesktopNav } from './desktop-nav'
-import { MobileNav } from './mobile-nav'
+import { DesktopNav } from './components/desktop-nav'
+import { MobileNav } from './components/mobile-nav'
 
 export const Nav = () => {
 	return (

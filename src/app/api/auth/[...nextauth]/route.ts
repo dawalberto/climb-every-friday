@@ -1,5 +1,5 @@
-import { User } from '@/types/common'
-import { sql } from '@vercel/postgres'
+import { User } from '@/lib/types/user'
+import { getUserByEmail } from '@/services'
 import bcrypt from 'bcrypt'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -22,22 +22,19 @@ const handler = NextAuth({
 					return null
 				}
 				try {
-					const { rows } = await sql<User>`SELECT * FROM users WHERE email=${
-						credentials.email as string
-					};`
-					const foundUser = rows[0]
+					const user = await getUserByEmail(credentials.email as string)
 
-					if (foundUser) {
+					if (user) {
 						const match = await bcrypt.compare(
 							credentials.password as string,
-							foundUser.password ?? ''
+							user.password ?? ''
 						)
 
 						if (match) {
-							const authorizedUser = { ...foundUser }
+							const authorizedUser = { ...user }
 							delete authorizedUser.password
 
-							return foundUser
+							return user
 						}
 					}
 				} catch (error) {
