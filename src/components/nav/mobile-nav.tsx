@@ -1,4 +1,5 @@
-import { interFont, menuRoutes } from '@/lib/constants'
+import { interFont } from '@/lib/constants'
+import { routes } from '@/lib/routes'
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
@@ -20,7 +21,7 @@ export const MobileNav = () => {
 	}
 
 	return (
-		<nav className='flex h-16 items-center justify-between px-4 text-lg sm:hidden'>
+		<nav className='flex h-16 items-center justify-between px-4 sm:hidden'>
 			<motion.button
 				onClick={toggleMenu}
 				animate={{ rotate: showMenu ? 180 : 0 }}
@@ -58,7 +59,7 @@ export const MobileNav = () => {
 							transition={{ duration: 0.2, delay: 0.2 }}
 							className='-mt-16 flex h-full flex-col items-center justify-center space-y-5'
 						>
-							{menuRoutes.map(({ name, path }) => (
+							{routes.map(({ name, path }) => (
 								<button
 									key={path}
 									onClick={() => handleOnNavItemClick(path)}

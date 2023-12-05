@@ -1,16 +1,5 @@
 import { Inter, Khand } from 'next/font/google'
 
-export const menuRoutes = [
-	{
-		name: 'Home',
-		path: '/',
-	},
-	{
-		name: 'Improvements',
-		path: '/improvements',
-	},
-]
-
 export const interFont = Inter({
 	subsets: ['latin'],
 	display: 'swap',

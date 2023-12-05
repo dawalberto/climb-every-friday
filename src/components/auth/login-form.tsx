@@ -1,6 +1,6 @@
 'use client'
 
-import { FormDataState, User } from '@/types/common'
+import { FormDataState, User } from '@/lib/types/common'
 import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import clsx from 'clsx'
 import { signIn } from 'next-auth/react'
