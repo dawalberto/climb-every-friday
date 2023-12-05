@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { GiMountainClimbing, GiMountaintop } from 'react-icons/gi'
-import { navAnimationVariants } from './styles'
+import { navAnimationVariants, navItemAnimationStyle } from '../styles'
 
 export const MobileNav = () => {
 	const [showMenu, setShowMenu] = useState(false)
@@ -86,5 +86,3 @@ export const MobileNav = () => {
 		</nav>
 	)
 }
-
-const navItemAnimationStyle = 'transition-transform duration-200 active:scale-95'

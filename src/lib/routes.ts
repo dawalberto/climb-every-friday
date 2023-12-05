@@ -23,22 +23,6 @@ export const routes = [
 					},
 				],
 			},
-			{
-				name: 'Peña morena',
-				path: '/penia-rubia',
-				subRoutes: [
-					{
-						name: 'Competición up',
-						path: '/competicion-up',
-						subRoutes: [
-							{
-								name: 'delfin',
-								path: '/delfin',
-							},
-						],
-					},
-				],
-			},
 		],
 	},
 ]
