@@ -4,12 +4,14 @@ import { interFont } from '@/lib/constants'
 import { routes } from '@/lib/routes'
 import { Menu } from '@headlessui/react'
 import clsx from 'clsx'
+import { AnimatePresence, motion } from 'framer-motion'
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { GiMountainClimbing, GiMountaintop } from 'react-icons/gi'
-import { HiChevronLeft } from 'react-icons/hi2'
+import { HiChevronDown, HiChevronLeft } from 'react-icons/hi2'
 import { PiSignOut } from 'react-icons/pi'
+import { navAnimationVariants } from './styles'
 
 export const DesktopNav = () => {
 	const { data: session } = useSession()
@@ -97,32 +99,53 @@ function generateNavigation({
 						className={clsx(
 							interFont.className,
 							navItemAnimationStyle,
-							'flex items-center justify-between'
+							'flex items-center justify-between px-2 py-1'
 						)}
 					>
-						<Link key={fullPath} href={fullPath} onClick={handleOnClick}>
+						<Link
+							key={fullPath}
+							href={fullPath}
+							onClick={handleOnClick}
+							className='mr-1 transition-transform duration-200 hover:scale-105 active:scale-95'
+						>
 							{name}
 						</Link>
 
-						{subRoutes && (
-							<Menu as='div' className='relative'>
-								<Menu.Button className='flex items-center'>
-									<HiChevronLeft />
-								</Menu.Button>
-								<Menu.Items className='absolute left-0 mt-1 w-36 rounded-sm border-2 border-amber-600 bg-gradient-to-r from-amber-300 to-amber-500 px-2 py-1 text-left text-base shadow-sm'>
-									<Menu.Item as='div'>
-										{({ close: closeMenu }) =>
-											generateNavigation({
-												routes: subRoutes,
-												parentPath: fullPath,
-												closeSubroutes,
-												close: closeMenu,
-											})
-										}
-									</Menu.Item>
-								</Menu.Items>
-							</Menu>
-						)}
+						<AnimatePresence>
+							{subRoutes && (
+								<Menu as='div' className='relative'>
+									{({ open }) => (
+										<>
+											<Menu.Button className='flex items-center'>
+												{open ? <HiChevronDown /> : <HiChevronLeft />}
+											</Menu.Button>
+											<Menu.Items className='absolute left-7 mt-1 w-36 text-left text-base shadow-lg'>
+												<motion.div
+													initial={navAnimationVariants.closed}
+													animate={navAnimationVariants.open}
+													exit={navAnimationVariants.closed}
+													transition={{ duration: 0.2 }}
+												>
+													<Menu.Item
+														as='div'
+														className='rounded-sm bg-gradient-to-r from-amber-300 to-amber-500'
+													>
+														{({ close: closeMenu }) =>
+															generateNavigation({
+																routes: subRoutes,
+																parentPath: fullPath,
+																closeSubroutes,
+																close: closeMenu,
+															})
+														}
+													</Menu.Item>
+												</motion.div>
+											</Menu.Items>
+										</>
+									)}
+								</Menu>
+							)}
+						</AnimatePresence>
 					</div>
 				)
 			})}

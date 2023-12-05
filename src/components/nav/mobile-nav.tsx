@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { GiMountainClimbing, GiMountaintop } from 'react-icons/gi'
+import { navAnimationVariants } from './styles'
 
 export const MobileNav = () => {
 	const [showMenu, setShowMenu] = useState(false)
@@ -46,16 +47,16 @@ export const MobileNav = () => {
 			<AnimatePresence>
 				{showMenu && (
 					<motion.div
-						initial={animationVariants.closed}
-						animate={animationVariants.open}
-						exit={animationVariants.closed}
+						initial={navAnimationVariants.closed}
+						animate={navAnimationVariants.open}
+						exit={navAnimationVariants.closed}
 						transition={{ duration: 0.2 }}
 						className='fixed left-0 top-16 z-30 h-screen w-full bg-gradient-to-r from-amber-300 to-amber-500'
 					>
 						<motion.div
-							initial={animationVariants.closed}
-							animate={animationVariants.open}
-							exit={animationVariants.closed}
+							initial={navAnimationVariants.closed}
+							animate={navAnimationVariants.open}
+							exit={navAnimationVariants.closed}
 							transition={{ duration: 0.2, delay: 0.2 }}
 							className='-mt-16 flex h-full flex-col items-center justify-center space-y-5'
 						>
@@ -87,7 +88,3 @@ export const MobileNav = () => {
 }
 
 const navItemAnimationStyle = 'transition-transform duration-200 active:scale-95'
-export const animationVariants = {
-	open: { opacity: 1, x: 0 },
-	closed: { opacity: 0, x: '-100%' },
-}
