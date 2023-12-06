@@ -30,9 +30,16 @@ export const useNavigation = ({
 			closeSubroutes.push(close)
 		}
 
-		const handleOnClick = () => {
+		const handleOnNavigate = () => {
 			if (close && closeSubroutes) {
 				closeSubroutes.forEach((close) => close())
+			}
+		}
+
+		const handleCloseSubroutes = (e: React.MouseEvent, menuIsOpen: boolean) => {
+			if (menuIsOpen && closeSubroutes.length) {
+				e.preventDefault()
+				closeSubroutes[closeSubroutes.length - 1]()
 			}
 		}
 
@@ -59,7 +66,7 @@ export const useNavigation = ({
 							<Link
 								key={fullPath}
 								href={fullPath}
-								onClick={handleOnClick}
+								onClick={handleOnNavigate}
 								className={clsx(navItemAnimationStyle, 'whitespace-nowrap')}
 							>
 								{name}
@@ -70,7 +77,10 @@ export const useNavigation = ({
 									<Menu as='div' className='relative ml-2'>
 										{({ open }) => (
 											<>
-												<Menu.Button className='flex items-center'>
+												<Menu.Button
+													className='flex items-center'
+													onClick={(e) => handleCloseSubroutes(e, open)}
+												>
 													<AnimatePresence mode='wait'>
 														<motion.div
 															key={open ? 'down' : 'right'}
