@@ -1,13 +1,12 @@
 'use client'
 
-import { FormDataState, User } from '@/types/common'
-import { delay } from '@/utils/methods'
-import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
+import { User } from '@/lib/types/user'
 import clsx from 'clsx'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { GiMountaintop } from 'react-icons/gi'
+import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 export default function LoginForm({ users }: { users: User[] }) {
 	const [formState, setFormState] = useState<FormDataState>({ state: 'idle' })
@@ -21,9 +20,6 @@ export default function LoginForm({ users }: { users: User[] }) {
 		const password = formData.get('password')
 
 		try {
-			// Simulate a long submit form by delaying for 2 seconds
-			await delay(2000)
-
 			const response = await signIn('credentials', {
 				email,
 				password,
@@ -37,14 +33,14 @@ export default function LoginForm({ users }: { users: User[] }) {
 				setFormState({
 					state: 'error',
 					error: 'credentials',
-					message: '🦊 Uppss wrong password',
+					message: '🦍 Uppss wrong password',
 				})
 			}
 		} catch (error) {
 			setFormState({
 				state: 'error',
 				error: 'unknown',
-				message: '🦊 Uppss something went wrong',
+				message: '🦍 Uppss something went wrong',
 			})
 		}
 	}
@@ -55,7 +51,7 @@ export default function LoginForm({ users }: { users: User[] }) {
 				name='email'
 				id='email'
 				required
-				className='rounded-sm focus:border-amber-400 focus:ring-amber-400'
+				className='rounded-sm  text-xl focus:border-amber-400 focus:ring-amber-400'
 			>
 				{users.map(({ id, name, email }) => (
 					<option key={id} value={email}>
@@ -70,11 +66,11 @@ export default function LoginForm({ users }: { users: User[] }) {
 				name='password'
 				required
 				minLength={6}
-				className='rounded-sm focus:border-amber-400 focus:ring-amber-400'
+				className='rounded-sm text-xl focus:border-amber-400 focus:ring-amber-400'
 			/>
 			<button
 				className={clsx(
-					'flex w-full flex-row items-center justify-center gap-2 rounded-b-sm bg-gradient-to-r from-amber-400 to-amber-500 px-4 py-2 text-xl text-white  hover:from-amber-500 hover:to-amber-700 active:bg-amber-800 active:from-amber-600',
+					'flex-center flex w-full flex-row gap-2 rounded-b-sm bg-gradient-to-r from-amber-400 to-amber-500 px-4 py-2 text-xl text-white hover:from-amber-500 hover:to-amber-700 active:bg-amber-800 active:from-amber-600',
 					'disabled:cursor-not-allowed disabled:from-amber-100 disabled:to-amber-300'
 				)}
 				disabled={formState.state === 'loading'}
@@ -92,7 +88,7 @@ export default function LoginForm({ users }: { users: User[] }) {
 			>
 				{formState?.error === 'credentials' && (
 					<>
-						<ExclamationCircleIcon className='h-5 w-5 text-red-500' />
+						<HiOutlineExclamationCircle className='h-5 w-5 text-red-500' />
 						<p className='text-sm text-red-500'>{formState.message}</p>
 					</>
 				)}

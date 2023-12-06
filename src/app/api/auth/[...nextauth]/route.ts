@@ -1,5 +1,5 @@
-import { User } from '@/types/common'
-import { sql } from '@vercel/postgres'
+import { User } from '@/lib/types/user'
+import { getUserByEmail } from '@/services'
 import bcrypt from 'bcrypt'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -22,26 +22,24 @@ const handler = NextAuth({
 					return null
 				}
 				try {
-					const { rows } = await sql<User>`SELECT * FROM users WHERE email=${
-						credentials.email as string
-					};`
-					const foundUser = rows[0]
+					const user = await getUserByEmail(credentials.email as string)
 
-					if (foundUser) {
+					if (user) {
 						const match = await bcrypt.compare(
 							credentials.password as string,
-							foundUser.password ?? ''
+							user.password ?? ''
 						)
 
 						if (match) {
-							const authorizedUser: any = { ...foundUser }
+							const authorizedUser = { ...user }
 							delete authorizedUser.password
 
-							authorizedUser.role = 'admin'
-							return foundUser
+							return user
 						}
 					}
-				} catch (error) {}
+				} catch (error) {
+					console.log('🦍 error', error)
+				}
 				return null
 			},
 		}),
@@ -51,17 +49,20 @@ const handler = NextAuth({
 			if (account?.provider === 'credentials') return true
 			return false
 		},
-		async jwt({ token, user, account, profile }) {
+		async jwt({ token, user }) {
 			if (user) {
 				token.id = user.id
+				token.role = (user as User).role
 			}
 			return token
 		},
-		// async authorized(params) {
-		// 	return true
-		// },
 		async session({ session, token }) {
-			if (session?.user) (session.user as any).role = token.role
+			if (session?.user && token?.id) {
+				const userSession = { ...session.user } as User
+				userSession.id = token.id as string
+				userSession.role = (token.role as string) ?? ''
+				session.user = userSession
+			}
 			return session
 		},
 	},
