@@ -15,7 +15,7 @@ import { navItemAnimationStyle } from '../styles'
 export const DesktopNav = () => {
 	const { data: session } = useSession()
 	const route = useRouter()
-	const { generateNavigation } = useNavigation()
+	const { generateNavigation } = useNavigation({ navigationType: 'desktop' })
 
 	return (
 		<nav className='mx-auto hidden h-16 max-w-7xl items-center justify-between px-4 text-lg font-semibold tracking-wide sm:flex'>
