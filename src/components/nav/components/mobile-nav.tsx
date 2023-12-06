@@ -53,7 +53,7 @@ export const MobileNav = () => {
 						animate={navAnimationVariants.open}
 						exit={navAnimationVariants.closed}
 						transition={{ duration: 0.2 }}
-						className='fixed left-0 top-16 z-30 h-screen w-full bg-gradient-to-r from-amber-300 to-amber-500'
+						className='fixed left-0 top-16 z-30 flex h-screen w-full flex-col items-center gap-7 bg-gradient-to-r from-amber-300 to-amber-500 pt-6'
 					>
 						{navigation}
 					</motion.div>
