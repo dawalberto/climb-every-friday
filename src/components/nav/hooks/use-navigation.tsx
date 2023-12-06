@@ -68,7 +68,7 @@ export const useNavigation = () => {
 													</AnimatePresence>
 												</Menu.Button>
 
-												<Menu.Items className='absolute left-1/3 mt-1 w-fit text-left text-base '>
+												<Menu.Items className='absolute -left-9 mt-3 w-fit text-left text-base'>
 													<motion.div
 														initial={navAnimationVariants.closed}
 														animate={navAnimationVariants.open}
