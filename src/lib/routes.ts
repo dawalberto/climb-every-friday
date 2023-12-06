@@ -1,19 +1,24 @@
-export const routes = [
+export const routes: Route[] = [
 	{
 		name: 'Villena',
 		path: '/villena',
+		category: 'location',
 		subRoutes: [
 			{
 				name: 'Peña rubia',
 				path: '/penia-rubia',
+				category: 'place',
+
 				subRoutes: [
 					{
 						name: 'Competición Down',
 						path: '/competicion-down',
+						category: 'sector',
 						subRoutes: [
 							{
 								name: 'Tiburón',
 								path: '/tiburon',
+								category: 'boulder',
 							},
 						],
 					},

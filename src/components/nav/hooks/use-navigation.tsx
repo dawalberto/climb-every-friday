@@ -3,6 +3,8 @@ import { Disclosure, Menu } from '@headlessui/react'
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
+import { GiStonePile } from 'react-icons/gi'
+import { GoMilestone } from 'react-icons/go'
 import { HiChevronDown } from 'react-icons/hi2'
 import { navAnimationVariants, navItemAnimationStyle } from '../styles'
 
@@ -43,6 +45,27 @@ export const useNavigation = ({
 			}
 		}
 
+		const getCategory = (category?: Pick<Route, 'category'>['category']) => {
+			switch (category) {
+				case 'sector':
+					return (
+						<div className='flex-center flex space-x-2 px-6 py-1 text-amber-700'>
+							<GoMilestone className='h-5 w-5' />
+							<h2 className='text-sm capitalize'>{category}</h2>
+						</div>
+					)
+				case 'boulder':
+					return (
+						<div className='flex-center flex space-x-2 px-6 py-1 text-amber-700'>
+							<GiStonePile className='h-5 w-5' />
+							<h2 className='text-sm capitalize'>{category}</h2>
+						</div>
+					)
+				default:
+					return null
+			}
+		}
+
 		const Navigation = (
 			<div
 				className={clsx(
@@ -52,81 +75,86 @@ export const useNavigation = ({
 						: 'flex-col divide-y-2 divide-amber-500'
 				)}
 			>
-				{routes.map(({ name, path, subRoutes }) => {
+				{routes.map(({ name, path, category, subRoutes }) => {
 					const fullPath = `${parentPath}${path}`
 
 					return (
-						<div
-							key={path}
-							className={clsx(
-								interFont.className,
-								'flex items-center justify-between px-3 py-1.5'
-							)}
-						>
-							<Link
-								key={fullPath}
-								href={fullPath}
-								onClick={handleOnNavigate}
-								className={clsx(navItemAnimationStyle, 'whitespace-nowrap')}
-							>
-								{name}
-							</Link>
-
-							<AnimatePresence>
-								{subRoutes && (
-									<Menu as='div' className='relative ml-2'>
-										{({ open }) => (
-											<>
-												<Menu.Button
-													className='flex items-center'
-													onClick={(e) => handleCloseSubroutes(e, open)}
-												>
-													<AnimatePresence mode='wait'>
-														<motion.div
-															key={open ? 'down' : 'right'}
-															initial={{ rotate: 0 }}
-															animate={{ rotate: open ? 0 : -90 }}
-															exit={{ rotate: 0 }}
-														>
-															<HiChevronDown className='h-4 w-4' />
-														</motion.div>
-													</AnimatePresence>
-												</Menu.Button>
-
-												<Menu.Items
-													className={clsx(
-														'absolute -left-7 mt-3 w-fit text-left text-base',
-														currentIteration !== 0 && 'z-50'
-													)}
-												>
-													<motion.div
-														initial={navAnimationVariants.closed}
-														animate={navAnimationVariants.open}
-														exit={navAnimationVariants.closed}
-														transition={{ duration: 0.2 }}
-													>
-														<Menu.Item
-															as='div'
-															className='rounded-sm bg-gradient-to-r from-amber-500 to-amber-300 shadow-lg'
-														>
-															{({ close: closeMenu }) =>
-																generateDesktopNavigation({
-																	routes: subRoutes,
-																	parentPath: fullPath,
-																	closeSubroutes,
-																	close: closeMenu,
-																	currentIteration,
-																})
-															}
-														</Menu.Item>
-													</motion.div>
-												</Menu.Items>
-											</>
-										)}
-									</Menu>
+						<>
+							{getCategory(category)}
+							<div
+								key={path}
+								className={clsx(
+									interFont.className,
+									'flex items-center justify-between px-3 py-1.5'
 								)}
-							</AnimatePresence>
-						</div>
+							>
+								<Link
+									key={fullPath}
+									href={fullPath}
+									onClick={handleOnNavigate}
+									className={clsx(navItemAnimationStyle, 'whitespace-nowrap')}
+								>
+									{name}
+								</Link>
+
+								<AnimatePresence>
+									{subRoutes && (
+										<Menu as='div' className='relative ml-2'>
+											{({ open }) => (
+												<>
+													<Menu.Button
+														className='flex items-center'
+														onClick={(e) =>
+															handleCloseSubroutes(e, open)
+														}
+													>
+														<AnimatePresence mode='wait'>
+															<motion.div
+																key={open ? 'down' : 'right'}
+																initial={{ rotate: 0 }}
+																animate={{ rotate: open ? 0 : -90 }}
+																exit={{ rotate: 0 }}
+															>
+																<HiChevronDown className='h-4 w-4' />
+															</motion.div>
+														</AnimatePresence>
+													</Menu.Button>
+
+													<Menu.Items
+														className={clsx(
+															'absolute -left-7 mt-3 w-fit text-left text-base',
+															currentIteration !== 0 && 'z-50'
+														)}
+													>
+														<motion.div
+															initial={navAnimationVariants.closed}
+															animate={navAnimationVariants.open}
+															exit={navAnimationVariants.closed}
+															transition={{ duration: 0.2 }}
+														>
+															<Menu.Item
+																as='div'
+																className='rounded-sm bg-gradient-to-r from-amber-500 to-amber-300 shadow-lg'
+															>
+																{({ close: closeMenu }) =>
+																	generateDesktopNavigation({
+																		routes: subRoutes,
+																		parentPath: fullPath,
+																		closeSubroutes,
+																		close: closeMenu,
+																		currentIteration,
+																	})
+																}
+															</Menu.Item>
+														</motion.div>
+													</Menu.Items>
+												</>
+											)}
+										</Menu>
+									)}
+								</AnimatePresence>
+							</div>
+						</>
 					)
 				})}
 			</div>
