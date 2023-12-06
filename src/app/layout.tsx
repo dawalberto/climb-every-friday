@@ -1,4 +1,5 @@
 import { AuthProvider, Nav } from '@/components'
+import SetVh from '@/components/set-vh/set-vh'
 import { khandFont } from '@/lib/constants'
 import type { Metadata } from 'next'
 import './globals.css'
@@ -14,9 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			<AuthProvider>
 				<body className='bg-amber-50 text-lg text-amber-950'>
 					<Nav />
-					<div className='mx-auto max-w-7xl px-4 pt-3'>{children}</div>
+					<div className='mx-auto max-w-7xl px-4 pt-20 sm:pt-3'>{children}</div>
 				</body>
 			</AuthProvider>
+			<SetVh />
 		</html>
 	)
 }
