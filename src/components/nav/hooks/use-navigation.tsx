@@ -118,13 +118,7 @@ export const useNavigation = ({
 		parentPath?: string
 	}) => {
 		const Navigation = (
-			<motion.div
-				initial={navAnimationVariants.closed}
-				animate={navAnimationVariants.open}
-				exit={navAnimationVariants.closed}
-				transition={{ duration: 0.2 }}
-				className='fixed left-0 top-16 z-30 h-screen w-full bg-gradient-to-r from-amber-300 to-amber-500'
-			>
+			<div className='fixed left-1/2 my-8 -translate-x-1/2'>
 				{routes.map(({ name, path, subRoutes }) => {
 					const fullPath = `${parentPath}${path}`
 
@@ -187,7 +181,7 @@ export const useNavigation = ({
 						</div>
 					)
 				})}
-			</motion.div>
+			</div>
 		)
 
 		return Navigation

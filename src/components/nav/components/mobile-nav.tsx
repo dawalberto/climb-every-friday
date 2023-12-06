@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { GiMountainClimbing, GiMountaintop } from 'react-icons/gi'
 import { useNavigation } from '../hooks/use-navigation'
-import { navItemAnimationStyle } from '../styles'
+import { navAnimationVariants, navItemAnimationStyle } from '../styles'
 
 export const MobileNav = () => {
 	const [showMenu, setShowMenu] = useState(false)
@@ -46,7 +46,19 @@ export const MobileNav = () => {
 					/>
 				</svg>
 			</motion.button>
-			<AnimatePresence>{showMenu && navigation}</AnimatePresence>
+			<AnimatePresence>
+				{showMenu && (
+					<motion.div
+						initial={navAnimationVariants.closed}
+						animate={navAnimationVariants.open}
+						exit={navAnimationVariants.closed}
+						transition={{ duration: 0.2 }}
+						className='fixed left-0 top-16 z-30 h-screen w-full bg-gradient-to-r from-amber-300 to-amber-500'
+					>
+						{navigation}
+					</motion.div>
+				)}
+			</AnimatePresence>
 			<Link href='/' className={clsx(navItemAnimationStyle, 'z-40')}>
 				<GiMountaintop className='h-10 w-10' />
 			</Link>

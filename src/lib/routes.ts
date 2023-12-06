@@ -1,8 +1,4 @@
 export const routes = [
-	// {
-	// 	name: 'Home',
-	// 	path: '/',
-	// },
 	{
 		name: 'Villena',
 		path: '/villena',
