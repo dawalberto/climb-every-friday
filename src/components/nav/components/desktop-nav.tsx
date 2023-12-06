@@ -18,11 +18,14 @@ export const DesktopNav = () => {
 	const { generateNavigation } = useNavigation({ navigationType: 'desktop' })
 
 	return (
-		<nav className='mx-auto hidden h-16 max-w-7xl items-center justify-between px-4 text-lg font-semibold tracking-wide sm:flex'>
-			<div className='flex items-center gap-5 space-x-9'>
-				<Link href={'/'} className={clsx(interFont.className, navItemAnimationStyle)}>
-					<GiMountaintop className='h-10 w-10' />
-				</Link>
+		<nav className='mx-auto hidden h-16 max-w-7xl items-center justify-between space-x-4 px-4 text-lg font-semibold tracking-wide sm:flex'>
+			<Link
+				href={'/'}
+				className={clsx(interFont.className, navItemAnimationStyle, 'flex-none')}
+			>
+				<GiMountaintop className='h-10 w-10' />
+			</Link>
+			<div className='flex-1 flex-row items-center gap-5 space-x-9'>
 				{generateNavigation({ routes })}
 			</div>
 			{session?.user && (
@@ -30,7 +33,7 @@ export const DesktopNav = () => {
 					<Menu.Button>
 						<GiMountainClimbing className='h-10 w-10' />
 					</Menu.Button>
-					<Menu.Items className='absolute right-0 mt-0.5 w-36 rounded-sm bg-gradient-to-r from-amber-300 to-amber-500 py-1 text-left text-base shadow-sm'>
+					<Menu.Items className='absolute right-0 mt-0.5 divide-y-2 divide-amber-500 whitespace-nowrap rounded-sm bg-gradient-to-r from-amber-300 to-amber-500 py-1 text-left text-base shadow-sm'>
 						<Menu.Item as='div'>
 							<button
 								onClick={() => route.push('/user')}

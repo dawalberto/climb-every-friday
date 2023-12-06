@@ -18,11 +18,13 @@ export const useNavigation = ({
 		parentPath = '',
 		close,
 		closeSubroutes = [],
+		currentIteration = 0,
 	}: {
 		routes: Route[]
 		parentPath?: string
 		close?: () => void
 		closeSubroutes?: (() => void)[]
+		currentIteration?: number
 	}) => {
 		if (close && closeSubroutes) {
 			closeSubroutes.push(close)
@@ -35,7 +37,14 @@ export const useNavigation = ({
 		}
 
 		const Navigation = (
-			<div className='cursor-pointer'>
+			<div
+				className={clsx(
+					'flex',
+					currentIteration === 0
+						? 'flex-row space-x-4'
+						: 'flex-col divide-y-2 divide-amber-500'
+				)}
+			>
 				{routes.map(({ name, path, subRoutes }) => {
 					const fullPath = `${parentPath}${path}`
 
@@ -44,21 +53,21 @@ export const useNavigation = ({
 							key={path}
 							className={clsx(
 								interFont.className,
-								'flex items-center justify-between px-2 py-1'
+								'flex items-center justify-between px-3 py-1.5'
 							)}
 						>
 							<Link
 								key={fullPath}
 								href={fullPath}
 								onClick={handleOnClick}
-								className={clsx(navItemAnimationStyle, 'mr-1 whitespace-nowrap')}
+								className={clsx(navItemAnimationStyle, 'whitespace-nowrap')}
 							>
 								{name}
 							</Link>
 
 							<AnimatePresence>
 								{subRoutes && (
-									<Menu as='div' className='relative'>
+									<Menu as='div' className='relative ml-2'>
 										{({ open }) => (
 											<>
 												<Menu.Button className='flex items-center'>
@@ -74,7 +83,12 @@ export const useNavigation = ({
 													</AnimatePresence>
 												</Menu.Button>
 
-												<Menu.Items className='absolute -left-9 mt-3 w-fit text-left text-base'>
+												<Menu.Items
+													className={clsx(
+														'absolute -left-7 mt-3 w-fit text-left text-base',
+														currentIteration !== 0 && 'z-50'
+													)}
+												>
 													<motion.div
 														initial={navAnimationVariants.closed}
 														animate={navAnimationVariants.open}
@@ -83,7 +97,7 @@ export const useNavigation = ({
 													>
 														<Menu.Item
 															as='div'
-															className='rounded-sm bg-gradient-to-r from-amber-300 to-amber-500 shadow-lg'
+															className='rounded-sm bg-gradient-to-r from-amber-500 to-amber-300 shadow-lg'
 														>
 															{({ close: closeMenu }) =>
 																generateDesktopNavigation({
@@ -91,6 +105,7 @@ export const useNavigation = ({
 																	parentPath: fullPath,
 																	closeSubroutes,
 																	close: closeMenu,
+																	currentIteration,
 																})
 															}
 														</Menu.Item>
@@ -107,6 +122,7 @@ export const useNavigation = ({
 			</div>
 		)
 
+		currentIteration++
 		return Navigation
 	}
 
