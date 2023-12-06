@@ -3,7 +3,7 @@ import { Menu } from '@headlessui/react'
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
-import { HiChevronDown } from 'react-icons/hi'
+import { HiChevronDown } from 'react-icons/hi2'
 import { navAnimationVariants, navItemAnimationStyle } from '../styles'
 
 export const useNavigation = () => {
@@ -45,7 +45,7 @@ export const useNavigation = () => {
 								key={fullPath}
 								href={fullPath}
 								onClick={handleOnClick}
-								className={clsx(navItemAnimationStyle, 'mr-1')}
+								className={clsx(navItemAnimationStyle, 'mr-1 whitespace-nowrap')}
 							>
 								{name}
 							</Link>
@@ -57,28 +57,18 @@ export const useNavigation = () => {
 											<>
 												<Menu.Button className='flex items-center'>
 													<AnimatePresence mode='wait'>
-														{open ? (
-															<motion.div
-																key='down'
-																initial={{ rotate: 0 }}
-																animate={{ rotate: -90 }}
-																exit={{ rotate: 0 }}
-															>
-																<HiChevronDown />
-															</motion.div>
-														) : (
-															<motion.div
-																key='right'
-																initial={{ rotate: 0 }}
-																animate={{ rotate: 0 }}
-																exit={{ rotate: 0 }}
-															>
-																<HiChevronDown />
-															</motion.div>
-														)}
+														<motion.div
+															key={open ? 'down' : 'right'}
+															initial={{ rotate: 0 }}
+															animate={{ rotate: open ? 0 : -90 }}
+															exit={{ rotate: 0 }}
+														>
+															<HiChevronDown className='h-4 w-4' />
+														</motion.div>
 													</AnimatePresence>
 												</Menu.Button>
-												<Menu.Items className='absolute left-7 mt-1 w-36 text-left text-base shadow-lg'>
+
+												<Menu.Items className='absolute left-1/3 mt-1 w-fit text-left text-base '>
 													<motion.div
 														initial={navAnimationVariants.closed}
 														animate={navAnimationVariants.open}
@@ -87,7 +77,7 @@ export const useNavigation = () => {
 													>
 														<Menu.Item
 															as='div'
-															className='rounded-sm bg-gradient-to-r from-amber-300 to-amber-500'
+															className='rounded-sm bg-gradient-to-r from-amber-300 to-amber-500 shadow-lg'
 														>
 															{({ close: closeMenu }) =>
 																generateNavigation({

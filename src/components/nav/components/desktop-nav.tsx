@@ -18,7 +18,7 @@ export const DesktopNav = () => {
 	const { generateNavigation } = useNavigation()
 
 	return (
-		<nav className='mx-auto hidden h-16 max-w-7xl items-center justify-between px-4 text-xl sm:flex'>
+		<nav className='mx-auto hidden h-16 max-w-7xl items-center justify-between px-4 text-lg font-semibold tracking-wide sm:flex'>
 			<div className='flex items-center gap-5 space-x-9'>
 				<Link href={'/'} className={clsx(interFont.className, navItemAnimationStyle)}>
 					<GiMountaintop className='h-10 w-10' />
@@ -30,7 +30,7 @@ export const DesktopNav = () => {
 					<Menu.Button>
 						<GiMountainClimbing className='h-10 w-10' />
 					</Menu.Button>
-					<Menu.Items className='bg-glassmorphism absolute right-0 mt-0.5 w-36 rounded-sm bg-gradient-to-r from-amber-300 to-amber-500 py-1 text-left text-base shadow-sm'>
+					<Menu.Items className='absolute right-0 mt-0.5 w-36 rounded-sm bg-gradient-to-r from-amber-300 to-amber-500 py-1 text-left text-base shadow-sm'>
 						<Menu.Item as='div'>
 							<button
 								onClick={() => route.push('/user')}

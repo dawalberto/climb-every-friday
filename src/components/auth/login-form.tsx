@@ -1,12 +1,12 @@
 'use client'
 
 import { User } from '@/lib/types/user'
-import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import clsx from 'clsx'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { GiMountaintop } from 'react-icons/gi'
+import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 export default function LoginForm({ users }: { users: User[] }) {
 	const [formState, setFormState] = useState<FormDataState>({ state: 'idle' })
@@ -88,7 +88,7 @@ export default function LoginForm({ users }: { users: User[] }) {
 			>
 				{formState?.error === 'credentials' && (
 					<>
-						<ExclamationCircleIcon className='h-5 w-5 text-red-500' />
+						<HiOutlineExclamationCircle className='h-5 w-5 text-red-500' />
 						<p className='text-sm text-red-500'>{formState.message}</p>
 					</>
 				)}
