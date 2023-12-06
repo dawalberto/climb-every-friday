@@ -45,27 +45,6 @@ export const useNavigation = ({
 			}
 		}
 
-		const getCategory = (category?: Pick<Route, 'category'>['category']) => {
-			switch (category) {
-				case 'sector':
-					return (
-						<div className='flex-center flex space-x-2 px-6 py-1 text-amber-700'>
-							<GoMilestone className='h-5 w-5' />
-							<h2 className='text-sm capitalize'>{category}</h2>
-						</div>
-					)
-				case 'boulder':
-					return (
-						<div className='flex-center flex space-x-2 px-6 py-1 text-amber-700'>
-							<GiStonePile className='h-5 w-5' />
-							<h2 className='text-sm capitalize'>{category}</h2>
-						</div>
-					)
-				default:
-					return null
-			}
-		}
-
 		const Navigation = (
 			<div
 				className={clsx(
@@ -173,7 +152,7 @@ export const useNavigation = ({
 		parentPath?: string
 		currentIteration?: number
 	}) => {
-		const Navigation = routes.map(({ name, path, subRoutes }) => {
+		const Navigation = routes.map(({ name, path, category, subRoutes }) => {
 			const fullPath = `${parentPath}${path}`
 
 			return (
@@ -186,12 +165,13 @@ export const useNavigation = ({
 									interFont.className,
 									navItemAnimationStyle,
 									'flex items-center whitespace-nowrap font-bold tracking-wide',
-									currentIteration <= 1 && 'text-3xl',
-									currentIteration === 2 && 'pl-4 text-2xl text-amber-900',
-									currentIteration === 3 && 'pl-8 text-xl text-amber-800',
-									currentIteration >= 4 && 'pl-16 text-lg text-amber-700'
+									currentIteration <= 1 && 'text-4xl',
+									currentIteration === 2 && 'pl-4 text-3xl text-amber-900',
+									currentIteration === 3 && 'pl-8 text-2xl text-amber-800',
+									currentIteration >= 4 && 'pl-16 text-xl text-amber-700'
 								)}
 							>
+								{getCategory(category)}
 								<button
 									onClick={() =>
 										handleOnNavItemClick && handleOnNavItemClick(fullPath)
@@ -249,6 +229,35 @@ export const useNavigation = ({
 
 		currentIteration++
 		return Navigation
+	}
+
+	const getCategory = (category?: Pick<Route, 'category'>['category']) => {
+		switch (category) {
+			case 'sector':
+				if (navigationType === 'desktop') {
+					return (
+						<div className='flex-center flex space-x-2 px-6 py-1 text-amber-700'>
+							<GoMilestone className='h-5 w-5' />
+							<h2 className='text-sm capitalize'>{category}</h2>
+						</div>
+					)
+				} else {
+					return <GoMilestone className='mr-2 h-6 w-6' />
+				}
+			case 'boulder':
+				if (navigationType === 'desktop') {
+					return (
+						<div className='flex-center flex space-x-2 px-6 py-1 text-amber-700'>
+							<GiStonePile className='h-5 w-5' />
+							<h2 className='text-sm capitalize'>{category}</h2>
+						</div>
+					)
+				} else {
+					return <GiStonePile className='mr-2 h-6 w-6' />
+				}
+			default:
+				return null
+		}
 	}
 
 	const generateNavigation =

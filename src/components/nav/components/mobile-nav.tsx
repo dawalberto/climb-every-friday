@@ -16,7 +16,10 @@ export const MobileNav = () => {
 		setShowMenu(false)
 		route.push(path)
 	}
-	const { generateNavigation } = useNavigation({ navigationType: 'mobile', handleOnNavItemClick })
+	const { generateNavigation } = useNavigation({
+		navigationType: 'mobile',
+		handleOnNavItemClick,
+	})
 	const navigation = generateNavigation({ routes })
 
 	const toggleMenu = () => {
@@ -25,7 +28,12 @@ export const MobileNav = () => {
 
 	return (
 		<>
-			<nav className='fixed left-0 z-50 flex h-16 w-full items-center justify-between bg-gradient-to-r from-amber-300 to-amber-500 px-4 sm:hidden'>
+			<nav
+				className={clsx(
+					!showMenu && 'shadow-md',
+					'fixed left-0 z-50 flex h-16 w-full items-center justify-between bg-gradient-to-r from-amber-300 to-amber-500 px-4 sm:hidden'
+				)}
+			>
 				<motion.button
 					onClick={toggleMenu}
 					animate={{ rotate: showMenu ? 180 : 0 }}
