@@ -55,10 +55,18 @@ export const MobileNav = () => {
 						/>
 					</svg>
 				</motion.button>
-				<Link href='/' className={clsx(navItemAnimationStyle, 'z-40')}>
+				<Link
+					href='/'
+					onClick={() => setShowMenu(false)}
+					className={clsx(navItemAnimationStyle, 'z-40')}
+				>
 					<GiMountaintop className='h-10 w-10' />
 				</Link>
-				<Link href='/user' className={clsx(navItemAnimationStyle, 'z-40')}>
+				<Link
+					href='/user'
+					onClick={() => setShowMenu(false)}
+					className={clsx(navItemAnimationStyle, 'z-40')}
+				>
 					<GiMountainClimbing className='h-10 w-10' />
 				</Link>
 			</nav>
