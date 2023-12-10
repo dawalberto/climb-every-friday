@@ -26,19 +26,21 @@ export default function Page() {
 			setCreateTaskState({ loading: false, error: false })
 			setTaskName('')
 		} catch (error) {
-			console.log('🦊 error', error)
+			setCreateTaskState({ loading: false, error: true })
 		}
 	}
 
 	return (
-		<form className='flex flex-col sm:flex-row' onSubmit={handleOnSubmit}>
+		<form className='flex flex-col shadow-md sm:flex-row' onSubmit={handleOnSubmit}>
 			<input
 				type='text'
 				placeholder='Task'
 				className={clsx(
-					'rounded-sm text-xl focus:border-amber-400 focus:ring-0 sm:w-[90%] sm:rounded-r-none sm:border-2 sm:border-r-0',
+					'border-2 text-xl focus:border-amber-400 focus:ring-0 sm:w-[90%]',
+					'rounded-t-sm border-b-0',
+					'sm:rounded-l-sm sm:rounded-r-none sm:border-b-2 sm:border-r-0',
 					createTaskState.error && 'border-red-500',
-					!createTaskState.error && 'sm:border-amber-900'
+					!createTaskState.error && 'border-amber-900'
 				)}
 				value={taskName}
 				onChange={(e) => setTaskName(e.target.value)}
@@ -47,9 +49,11 @@ export default function Page() {
 			<Button
 				buttonStyle='primary'
 				className={clsx(
-					'flex-1 sm:rounded-l-none sm:border-2 sm:border-l-0',
+					'flex-1 border-2',
+					'rounded-b-sm border-t-0',
+					'sm:rounded-l-none sm:rounded-r-sm sm:border-l-0 sm:border-t-2',
 					createTaskState.error && 'border-red-500',
-					!createTaskState.error && 'sm:border-amber-900'
+					!createTaskState.error && 'border-amber-900'
 				)}
 				disabled={createTaskState.loading}
 				type='submit'
