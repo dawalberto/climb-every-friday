@@ -1,7 +1,9 @@
 import { AuthProvider, Nav } from '@/components'
 import SetVh from '@/components/set-vh/set-vh'
 import { khandFont } from '@/lib/constants'
+import { toasterStyles } from '@/lib/utils/styles'
 import type { Metadata } from 'next'
+import { Toaster } from 'sonner'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -19,6 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				</body>
 			</AuthProvider>
 			<SetVh />
+			<Toaster
+				toastOptions={{
+					unstyled: true,
+					classNames: toasterStyles,
+				}}
+			/>
 		</html>
 	)
 }
