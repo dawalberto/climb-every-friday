@@ -4,4 +4,5 @@ type ButtonOptions = {
 	disabled?: boolean
 	buttonStyle?: 'primary'
 	onClick?: () => void
+	type?: 'button' | 'submit' | 'reset'
 }

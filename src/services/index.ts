@@ -1,2 +1,2 @@
-export * from './tasks'
+export * from './tasks/tasks'
 export * from './users'

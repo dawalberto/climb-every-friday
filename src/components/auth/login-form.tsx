@@ -11,7 +11,7 @@ export default function LoginForm({ users }: { users: User[] }) {
 	const [formState, setFormState] = useState<FormDataState>({ state: 'idle' })
 	const router = useRouter()
 
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+	const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		setFormState({ state: 'loading' })
 		const formData = new FormData(event.currentTarget)
@@ -45,7 +45,7 @@ export default function LoginForm({ users }: { users: User[] }) {
 	}
 
 	return (
-		<form className='flex flex-col gap-1' onSubmit={handleSubmit}>
+		<form className='flex flex-col gap-1' onSubmit={handleOnSubmit}>
 			<select
 				name='email'
 				id='email'
