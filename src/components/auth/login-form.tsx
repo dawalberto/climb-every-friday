@@ -1,6 +1,5 @@
 'use client'
 
-import { User } from '@/lib/types/user'
 import clsx from 'clsx'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'

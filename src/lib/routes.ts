@@ -26,6 +26,10 @@ export const routes: Route[] = [
 			},
 		],
 	},
+	{
+		name: 'Tasks',
+		path: '/tasks',
+	},
 ]
 
 // path names must to be the same as ddbb - Call the getMenu() function in seed to achieve this
