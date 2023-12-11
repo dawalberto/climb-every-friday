@@ -1,4 +1,4 @@
-import { insertTask } from '@/services'
+import { createTask, getTasks } from '@/services'
 
 // Create task
 export const POST = async (request: Request) => {
@@ -15,11 +15,20 @@ export const POST = async (request: Request) => {
 	}
 
 	try {
-		const { rowCount } = await insertTask(taskToCreate.userId, taskToCreate.taskName)
+		const { rowCount } = await createTask(taskToCreate.userId, taskToCreate.taskName)
 		if (rowCount !== 1) throw new Error('🦍 ❌ Could not create task')
 
 		return Response.json({ message: '🦍 ✅ Task created' })
 	} catch (error) {
 		return Response.json({ message: '🦍 ❌ Error creating task' })
+	}
+}
+
+export const GET = async () => {
+	try {
+		const tasks = await getTasks()
+		return Response.json(tasks)
+	} catch (error) {
+		return Response.json({ message: '🦍 ❌ Error getting tasks' })
 	}
 }

@@ -1,4 +1,4 @@
-export const createTask = async ({
+export const createTaskByApi = async ({
 	taskName,
 	userId,
 }: {
@@ -13,6 +13,15 @@ export const createTask = async ({
 			},
 			body: JSON.stringify({ taskName, userId }),
 		})
+	} catch (error) {
+		throw new Error('🦍 ❌ API error', { cause: error })
+	}
+}
+
+export const getTasksByApi = async (): Promise<Task[]> => {
+	try {
+		const tasks = await fetch('http://localhost:3000/api/tasks')
+		return await tasks.json()
 	} catch (error) {
 		throw new Error('🦍 ❌ API error', { cause: error })
 	}

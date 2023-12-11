@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components'
-import { createTask } from '@/services/tasks/api'
+import { createTaskByApi } from '@/services/tasks/api'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
@@ -9,7 +9,7 @@ import { HiOutlinePlus } from 'react-icons/hi2'
 import { ImSpinner2 } from 'react-icons/im'
 import { toast } from 'sonner'
 
-export const CreateTask = () => {
+export const CreateTask = ({ onCreateTask }: { onCreateTask: () => void }) => {
 	const { data } = useSession()
 	const { user } = data ?? {}
 	const [taskName, setTaskName] = useState<Pick<Task, 'name'>['name']>('')
@@ -19,7 +19,7 @@ export const CreateTask = () => {
 		event.preventDefault()
 		try {
 			setCreateTaskState({ loading: true, error: false })
-			const response = await createTask({ taskName, userId: (user as User).id ?? '' })
+			const response = await createTaskByApi({ taskName, userId: (user as User).id ?? '' })
 			if (!response.ok) {
 				toast.error('Error creating task')
 				setCreateTaskState({ loading: false, error: true })
@@ -28,8 +28,10 @@ export const CreateTask = () => {
 			toast.success('Task created successfully')
 			setCreateTaskState({ loading: false, error: false })
 			setTaskName('')
+			// ! It fails - revalidatePath('/tasks')
+			onCreateTask()
 		} catch (error) {
-			toast.error('Error creating task')
+			toast.error('Error creating task' + error)
 			setCreateTaskState({ loading: false, error: true })
 		}
 	}
