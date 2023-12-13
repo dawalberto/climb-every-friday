@@ -17,12 +17,3 @@ export const createTaskByApi = async ({
 		throw new Error('🦍 ❌ API error', { cause: error })
 	}
 }
-
-export const getTasksByApi = async (): Promise<Task[]> => {
-	try {
-		const tasks = await fetch('http://localhost:3000/api/tasks')
-		return await tasks.json()
-	} catch (error) {
-		throw new Error('🦍 ❌ API error', { cause: error })
-	}
-}

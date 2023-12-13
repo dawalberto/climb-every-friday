@@ -1,25 +1,18 @@
 'use client'
 
 import { CreateTask } from '@/components'
-import { getTasksByApi } from '@/services/tasks/api'
-import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 
 export default function Page() {
-	const [tasks, setTasks] = useState<Task[]>()
-	const [reFetch, setReFetch] = useState(false)
+	const { data: tasks, error, isLoading } = useSWR('/api/tasks')
 
-	useEffect(() => {
-		getTasksByApi()
-			.then((tasksResponse) => {
-				setTasks(tasksResponse)
-			})
-			.catch((error) => console.log('🦊 error', error))
-	}, [reFetch])
+	if (error) throw new Error(error.message)
+	if (isLoading) return <div>↻ Loading...</div>
 
 	return (
 		<>
-			<CreateTask onCreateTask={() => setReFetch((fetchState) => !fetchState)} />
-			{!tasks && <p>Loading...</p>}
+			<CreateTask />
+			{tasks?.length === 0 && <p>No tasks 🤷‍♂️</p>}
 			{tasks && (
 				<pre>
 					<code>{JSON.stringify(tasks, null, 4)}</code>

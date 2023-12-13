@@ -8,8 +8,9 @@ import { useState } from 'react'
 import { HiOutlinePlus } from 'react-icons/hi2'
 import { ImSpinner2 } from 'react-icons/im'
 import { toast } from 'sonner'
+import { mutate } from 'swr'
 
-export const CreateTask = ({ onCreateTask }: { onCreateTask: () => void }) => {
+export const CreateTask = () => {
 	const { data } = useSession()
 	const { user } = data ?? {}
 	const [taskName, setTaskName] = useState<Pick<Task, 'name'>['name']>('')
@@ -28,8 +29,7 @@ export const CreateTask = ({ onCreateTask }: { onCreateTask: () => void }) => {
 			toast.success('Task created successfully')
 			setCreateTaskState({ loading: false, error: false })
 			setTaskName('')
-			// ! It fails - revalidatePath('/tasks')
-			onCreateTask()
+			mutate('/api/tasks')
 		} catch (error) {
 			toast.error('Error creating task' + error)
 			setCreateTaskState({ loading: false, error: true })

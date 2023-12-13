@@ -1,6 +1,5 @@
 import { createTask, getTasks } from '@/services'
 
-// Create task
 export const POST = async (request: Request) => {
 	const taskToCreate = await request.json()
 
