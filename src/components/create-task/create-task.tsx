@@ -1,7 +1,8 @@
 'use client'
 
 import { Button } from '@/components'
-import { createTaskByApi } from '@/services/tasks/api'
+import { post } from '@/lib'
+import { endpoint as tasksEndpoint } from '@/services/tasks/tasks.endpoints'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
@@ -20,7 +21,10 @@ export const CreateTask = () => {
 		event.preventDefault()
 		try {
 			setCreateTaskState({ loading: true, error: false })
-			const response = await createTaskByApi({ taskName, userId: (user as User).id ?? '' })
+			const response = await post(tasksEndpoint, {
+				taskName,
+				userId: (user as User).id ?? '',
+			})
 			if (!response.ok) {
 				toast.error('Error creating task')
 				setCreateTaskState({ loading: false, error: true })

@@ -9,6 +9,7 @@ export const SWRProvider = ({ children }: { children: ReactNode }) => {
 		const fetcher: Fetcher = (resource: string) => fetch(resource).then((res) => res.json())
 		const onError = (error: Error) => {
 			console.log('🦊 error', error)
+			throw new Error(error.message)
 		}
 		return { refreshInterval, fetcher, onError }
 	})()
