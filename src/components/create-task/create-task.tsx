@@ -33,7 +33,7 @@ export const CreateTask = () => {
 			toast.success('Task created successfully')
 			setCreateTaskState({ loading: false, error: false })
 			setTaskName('')
-			mutate('/api/tasks')
+			mutate(tasksEndpoint)
 		} catch (error) {
 			toast.error('Error creating task' + error)
 			setCreateTaskState({ loading: false, error: true })

@@ -2,7 +2,8 @@ import { sql } from '@vercel/postgres'
 
 export const getTasks = async () => {
 	try {
-		const { rows } = await sql<Task>`SELECT * FROM tasks ORDER BY created_at DESC;`
+		const { rows } =
+			await sql<Task>`SELECT * FROM tasks ORDER BY priority DESC, created_at ASC;`
 		return rows
 	} catch (error) {
 		throw new Error('🦍 ❌ SQL error', { cause: error })

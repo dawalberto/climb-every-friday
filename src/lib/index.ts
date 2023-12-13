@@ -1,1 +1,1 @@
-export * from './utils/api-utils'
+export * from './api-utils'
