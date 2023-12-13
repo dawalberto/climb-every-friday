@@ -1,3 +1,6 @@
 export * from './auth/auth-provider'
 export * from './auth/login-form'
+export * from './button/button'
+export * from './create-task/create-task'
 export * from './nav/nav'
+export * from './swr-provider/swr-provider'
