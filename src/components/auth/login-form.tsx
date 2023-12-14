@@ -50,7 +50,7 @@ export default function LoginForm({ users }: { users: User[] }) {
 				name='email'
 				id='email'
 				required
-				className='rounded-sm  text-xl focus:border-amber-400 focus:ring-amber-400'
+				className='rounded-md  text-xl focus:border-amber-400 focus:ring-amber-400'
 			>
 				{users.map(({ id, name, email }) => (
 					<option key={id} value={email}>
@@ -65,11 +65,11 @@ export default function LoginForm({ users }: { users: User[] }) {
 				name='password'
 				required
 				minLength={6}
-				className='rounded-sm text-xl focus:border-amber-400 focus:ring-amber-400'
+				className='rounded-md text-xl focus:border-amber-400 focus:ring-amber-400'
 			/>
 			<button
 				className={clsx(
-					'flex-center flex w-full flex-row gap-2 rounded-b-sm bg-gradient-to-r from-amber-400 to-amber-500 px-4 py-2 text-xl text-white hover:from-amber-500 hover:to-amber-700 active:bg-amber-800 active:from-amber-600',
+					'flex-center flex w-full flex-row gap-2 rounded-b-md bg-gradient-to-r from-amber-400 to-amber-500 px-4 py-2 text-xl text-white hover:from-amber-500 hover:to-amber-700 active:bg-amber-800 active:from-amber-600',
 					'disabled:cursor-not-allowed disabled:from-amber-100 disabled:to-amber-300'
 				)}
 				disabled={formState.state === 'loading'}

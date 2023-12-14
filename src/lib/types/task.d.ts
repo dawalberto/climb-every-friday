@@ -9,3 +9,5 @@ type Task = {
 	done_at?: string
 	updated_by?: string
 }
+
+type GetTask = Task & { created_by_name: Pick<User, 'name'>['name'] }

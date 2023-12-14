@@ -115,7 +115,7 @@ export const useNavigation = ({
 														>
 															<Menu.Item
 																as='div'
-																className='rounded-sm bg-gradient-to-r from-amber-500 to-amber-300 shadow-lg'
+																className='rounded-md bg-gradient-to-r from-amber-500 to-amber-300 shadow-lg'
 															>
 																{({ close: closeMenu }) =>
 																	generateDesktopNavigation({

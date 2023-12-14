@@ -2,7 +2,7 @@
 
 import { Button } from '@/components'
 import { post } from '@/lib'
-import { endpoint as tasksEndpoint } from '@/services/tasks/tasks.endpoints'
+import { tasksEndpoint } from '@/services/tasks/tasks.endpoints'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
@@ -47,8 +47,8 @@ export const CreateTask = () => {
 				placeholder='Task'
 				className={clsx(
 					'border-2 text-xl focus:border-amber-400 focus:ring-0 sm:w-[90%]',
-					'rounded-t-sm border-b-0',
-					'sm:rounded-l-sm sm:rounded-r-none sm:border-b-2 sm:border-r-0',
+					'rounded-t-md border-b-0',
+					'sm:rounded-l-md sm:rounded-r-none sm:border-b-2 sm:border-r-0',
 					createTaskState.error && 'border-red-500',
 					!createTaskState.error && 'border-amber-900'
 				)}
@@ -60,8 +60,8 @@ export const CreateTask = () => {
 				buttonStyle='primary'
 				className={clsx(
 					'flex-1 border-2',
-					'rounded-b-sm border-t-0',
-					'sm:rounded-l-none sm:rounded-r-sm sm:border-l-0 sm:border-t-2',
+					'rounded-b-md border-t-0',
+					'sm:rounded-l-none sm:rounded-r-md sm:border-l-0 sm:border-t-2',
 					createTaskState.error && 'border-red-500',
 					!createTaskState.error && 'border-amber-900'
 				)}

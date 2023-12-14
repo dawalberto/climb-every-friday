@@ -33,7 +33,7 @@ export const DesktopNav = () => {
 					<Menu.Button>
 						<GiMountainClimbing className='h-10 w-10' />
 					</Menu.Button>
-					<Menu.Items className='absolute right-0 mt-0.5 divide-y-2 divide-amber-500 whitespace-nowrap rounded-sm bg-gradient-to-r from-amber-300 to-amber-500 py-1 text-left text-base shadow-sm'>
+					<Menu.Items className='absolute right-0 mt-0.5 divide-y-2 divide-amber-500 whitespace-nowrap rounded-md bg-gradient-to-r from-amber-300 to-amber-500 py-1 text-left text-base shadow-sm'>
 						<Menu.Item as='div'>
 							<button
 								onClick={() => route.push('/user')}
