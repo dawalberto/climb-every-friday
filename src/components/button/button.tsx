@@ -14,7 +14,7 @@ export const Button = ({
 	return (
 		<button
 			className={clsx(
-				'flex-center flex w-full flex-row gap-2 rounded-b-md px-4 py-2 text-xl',
+				'flex-center flex w-full flex-row gap-2 rounded-md px-4 py-2 text-xl',
 				'disabled:cursor-not-allowed',
 				className,
 				buttonStyle === 'primary' && buttonPrimary

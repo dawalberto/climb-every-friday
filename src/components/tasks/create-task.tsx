@@ -41,16 +41,19 @@ export const CreateTask = () => {
 	}
 
 	return (
-		<form className='flex flex-col shadow-md sm:flex-row' onSubmit={handleOnSubmit}>
+		<form
+			className='flex flex-col shadow-lg drop-shadow-lg sm:flex-row'
+			onSubmit={handleOnSubmit}
+		>
 			<input
 				type='text'
 				placeholder='Task'
 				className={clsx(
-					'border-2 text-xl focus:border-amber-400 focus:ring-0 sm:w-[90%]',
-					'rounded-t-md border-b-0',
-					'sm:rounded-l-md sm:rounded-r-none sm:border-b-2 sm:border-r-0',
-					createTaskState.error && 'border-red-500',
-					!createTaskState.error && 'border-amber-900'
+					'text-xl focus:border-amber-500 focus:ring-0 sm:w-[90%]',
+					'rounded-t-md',
+					'border-r-0 sm:rounded-l-md sm:rounded-r-none',
+					createTaskState.error && 'border-2 border-red-500',
+					!createTaskState.error && 'border-none'
 				)}
 				value={taskName}
 				onChange={(e) => setTaskName(e.target.value)}
@@ -59,11 +62,11 @@ export const CreateTask = () => {
 			<Button
 				buttonStyle='primary'
 				className={clsx(
-					'flex-1 border-2',
-					'rounded-b-md border-t-0',
-					'sm:rounded-l-none sm:rounded-r-md sm:border-l-0 sm:border-t-2',
-					createTaskState.error && 'border-red-500',
-					!createTaskState.error && 'border-amber-900'
+					'flex-1',
+					'rounded-b-md',
+					'sm:rounded-l-none sm:rounded-r-md',
+					createTaskState.error && 'border-2 border-red-500',
+					!createTaskState.error && 'border-none'
 				)}
 				disabled={createTaskState.loading}
 				type='submit'
