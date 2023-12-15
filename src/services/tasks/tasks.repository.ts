@@ -26,3 +26,12 @@ export const createTask = async (
 		throw new Error('🦍 ❌ SQL error', { cause: error })
 	}
 }
+
+export const deleteTask = async (taskId: Pick<Task, 'id'>['id']) => {
+	try {
+		const result = await sql<Task>`DELETE FROM tasks WHERE id = ${taskId};`
+		return result
+	} catch (error) {
+		throw new Error('🦍 ❌ SQL error', { cause: error })
+	}
+}
