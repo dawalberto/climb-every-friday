@@ -29,11 +29,11 @@ export const DesktopNav = () => {
 				{generateNavigation({ routes })}
 			</div>
 			{session?.user && (
-				<Menu as='div' className='relative'>
+				<Menu as='div' className='relative z-50'>
 					<Menu.Button>
 						<GiMountainClimbing className='h-10 w-10' />
 					</Menu.Button>
-					<Menu.Items className='absolute right-0 mt-0.5 divide-y-2 divide-amber-500 whitespace-nowrap rounded-sm bg-gradient-to-r from-amber-300 to-amber-500 py-1 text-left text-base shadow-sm'>
+					<Menu.Items className='absolute right-0 mt-0.5 divide-y-2 divide-amber-500 whitespace-nowrap rounded-md bg-gradient-to-r from-amber-300 to-amber-500 py-1 text-left text-base shadow-sm'>
 						<Menu.Item as='div'>
 							<button
 								onClick={() => route.push('/user')}
@@ -50,14 +50,17 @@ export const DesktopNav = () => {
 						<Menu.Item>
 							<button
 								onClick={() => signOut()}
-								className={clsx(
-									interFont.className,
-									navItemAnimationStyle,
-									'flex items-center space-x-2 px-4 py-1'
-								)}
+								className={clsx(interFont.className, '')}
 							>
-								<PiSignOut className='h-5 w-5' />
-								<span>Sign out</span>
+								<span
+									className={clsx(
+										navItemAnimationStyle,
+										'flex items-center space-x-2 px-4 py-1'
+									)}
+								>
+									<PiSignOut className='h-5 w-5' />
+									<span>Sign out</span>
+								</span>
 							</button>
 						</Menu.Item>
 					</Menu.Items>
