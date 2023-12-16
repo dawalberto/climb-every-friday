@@ -7,6 +7,9 @@ import { useState } from 'react'
 import { HiChevronDown, HiChevronUp, HiOutlineTrash } from 'react-icons/hi'
 import { useDebouncedCallback } from 'use-debounce'
 
+const maxPriority = 5
+const minPriority = 0
+
 export const Task = ({ task }: { task: GetTask }) => {
 	const { id, done, name, description, priority, created_by_name, created_at } = task
 	const {
@@ -41,7 +44,10 @@ export const Task = ({ task }: { task: GetTask }) => {
 				>
 					<span
 						title='Priority'
-						className='flex-center bg-primary-gradient absolute left-0 top-0 flex h-6 w-6 -translate-x-1/2 translate-y-1/2 rounded-full text-white'
+						className={clsx(
+							'flex-center absolute left-0 top-0 flex h-6 w-6 -translate-x-1/2 translate-y-1/2 rounded-full shadow-md drop-shadow-md',
+							priorityClasses[priority ?? 0]
+						)}
 					>
 						{priority}
 					</span>
@@ -74,7 +80,9 @@ export const Task = ({ task }: { task: GetTask }) => {
 							/>
 							<div className='flex-center flex w-fit gap-2 self-end sm:self-start'>
 								<button
-									disabled={actionRunning || taskState}
+									disabled={
+										actionRunning || taskState || priority === maxPriority
+									}
 									title='Prioritize'
 									onClick={() => updateTaskPriority((priority ?? 0) + 1)}
 									className={taskActionButtonStyle}
@@ -82,7 +90,9 @@ export const Task = ({ task }: { task: GetTask }) => {
 									<HiChevronUp className='text-amber-600' />
 								</button>
 								<button
-									disabled={actionRunning || taskState}
+									disabled={
+										actionRunning || taskState || priority === minPriority
+									}
 									title='Deprioritize'
 									onClick={() => updateTaskPriority((priority ?? 0) - 1)}
 									className={taskActionButtonStyle}
@@ -127,3 +137,12 @@ export const Task = ({ task }: { task: GetTask }) => {
 
 const taskActionButtonStyle =
 	'bg-glassmorphism flex-center flex h-8 w-8 rounded-md shadow-md drop-shadow-md hover:shadow-xl hover:drop-shadow-xl disabled:cursor-not-allowed'
+
+const priorityClasses = {
+	[maxPriority]: 'bg-amber-600 text-white',
+	[maxPriority - 1]: 'bg-amber-500 text-white',
+	[maxPriority - 2]: 'bg-amber-400',
+	[maxPriority - 3]: 'bg-amber-300',
+	[maxPriority - 4]: 'bg-amber-200',
+	[minPriority]: 'bg-amber-100',
+}

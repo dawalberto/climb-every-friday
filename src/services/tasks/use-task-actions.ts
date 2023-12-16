@@ -45,7 +45,7 @@ export const useTaskActions = (id: Pick<Task, 'id'>['id']) => {
 			action: () => update(`${tasksEndpoint}`, { id, done }),
 			successMessage: 'Task state updated successfully',
 			errorMessage: 'Error updating task',
-			toastOnSuccess: false,
+			toastOnSuccess: done,
 		})
 	}
 

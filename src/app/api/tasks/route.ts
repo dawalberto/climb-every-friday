@@ -77,6 +77,9 @@ export const PUT = async (request: Request) => {
 		}
 
 		if (taskToUpdate.priority !== undefined) {
+			if (taskToUpdate.priority < 0 || taskToUpdate.priority > 5) {
+				throw new Error('🦍 ❌ Invalid priority')
+			}
 			const { rowCount } = await updateTaskPriority(taskToUpdate.id, taskToUpdate.priority)
 			if (rowCount !== 1) throw new Error('🦍 ❌ Could not update task')
 
