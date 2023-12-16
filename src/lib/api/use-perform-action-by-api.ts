@@ -7,11 +7,19 @@ import { mutate } from 'swr'
 export const usePerformActionByApi = (endpoint: string) => {
 	const [actionRunning, setActionRunning] = useState(false)
 
-	const performAction = async (
-		action: () => Promise<Response>,
-		successMessage: string,
+	const performAction = async ({
+		action,
+		successMessage,
+		errorMessage,
+		toastOnSuccess = true,
+		toastOnError = true,
+	}: {
+		action: () => Promise<Response>
+		successMessage: string
 		errorMessage: string
-	) => {
+		toastOnSuccess?: boolean
+		toastOnError?: boolean
+	}) => {
 		setActionRunning(true)
 		try {
 			const response = await action()
@@ -19,9 +27,13 @@ export const usePerformActionByApi = (endpoint: string) => {
 				throw new Error(response.statusText)
 			}
 			mutate(endpoint)
-			toast.success(successMessage)
+			if (toastOnSuccess) {
+				toast.success(successMessage)
+			}
 		} catch (error) {
-			toast.error(errorMessage)
+			if (toastOnError) {
+				toast.error(errorMessage)
+			}
 		} finally {
 			setActionRunning(false)
 		}

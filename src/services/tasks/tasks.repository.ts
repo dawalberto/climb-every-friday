@@ -6,7 +6,7 @@ export const getTasks = async () => {
 			SELECT tasks.*, users.name as created_by_name
 			FROM tasks
 			INNER JOIN users ON tasks.created_by = users.id
-			ORDER BY priority DESC, created_at DESC;
+			ORDER BY priority DESC, created_at ASC;
 		`
 		return rows
 	} catch (error) {
@@ -42,6 +42,28 @@ export const updateTaskPriority = async (
 ) => {
 	try {
 		return await sql<Task>`UPDATE tasks SET priority = ${priority} WHERE id = ${taskId};`
+	} catch (error) {
+		throw new Error('🦍 ❌ SQL error', { cause: error })
+	}
+}
+
+export const updateTaskName = async (
+	taskId: Pick<Task, 'id'>['id'],
+	name: Pick<Task, 'name'>['name']
+) => {
+	try {
+		return await sql<Task>`UPDATE tasks SET name = ${name} WHERE id = ${taskId};`
+	} catch (error) {
+		throw new Error('🦍 ❌ SQL error', { cause: error })
+	}
+}
+
+export const updateTaskDescription = async (
+	taskId: Pick<Task, 'id'>['id'],
+	description: Pick<Task, 'description'>['description']
+) => {
+	try {
+		return await sql<Task>`UPDATE tasks SET description = ${description} WHERE id = ${taskId};`
 	} catch (error) {
 		throw new Error('🦍 ❌ SQL error', { cause: error })
 	}

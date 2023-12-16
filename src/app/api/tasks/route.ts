@@ -1,12 +1,19 @@
-import { createTask, deleteTask, getTasks, updateTaskPriority } from '@/services'
+import {
+	createTask,
+	deleteTask,
+	getTasks,
+	updateTaskDescription,
+	updateTaskName,
+	updateTaskPriority,
+} from '@/services'
 
 export const POST = async (request: Request) => {
-	const taskToCreate = await request.json()
+	const taskToCreate = (await request.json()) as UpdateTask & { userId: Pick<User, 'id'>['id'] }
 
 	if (!taskToCreate) {
 		throw new Error('🦍 ❌ No task to create')
 	}
-	if (!taskToCreate.taskName) {
+	if (!taskToCreate.name) {
 		throw new Error('🦍 ❌ No task name')
 	}
 	if (!taskToCreate.userId) {
@@ -14,7 +21,7 @@ export const POST = async (request: Request) => {
 	}
 
 	try {
-		const { rowCount } = await createTask(taskToCreate.userId, taskToCreate.taskName)
+		const { rowCount } = await createTask(taskToCreate.userId, taskToCreate.name)
 		if (rowCount !== 1) throw new Error('🦍 ❌ Could not create task')
 
 		return Response.json({ message: '🦍 ✅ Task created' })
@@ -33,17 +40,17 @@ export const GET = async () => {
 }
 
 export const DELETE = async (request: Request) => {
-	const taskToDelete = await request.json()
+	const taskToDelete = (await request.json()) as UpdateTask
 
 	if (!taskToDelete) {
 		throw new Error('🦍 ❌ No task to delete')
 	}
-	if (!taskToDelete.taskId) {
+	if (!taskToDelete.id) {
 		throw new Error('🦍 ❌ No task id')
 	}
 
 	try {
-		const { rowCount } = await deleteTask(taskToDelete.taskId)
+		const { rowCount } = await deleteTask(taskToDelete.id)
 		if (rowCount !== 1) throw new Error('🦍 ❌ Could not delete task')
 
 		return Response.json({ message: '🦍 ✅ Task deleted' })
@@ -53,30 +60,43 @@ export const DELETE = async (request: Request) => {
 }
 
 export const PUT = async (request: Request) => {
-	const taskToUpdate = await request.json()
+	const taskToUpdate = (await request.json()) as UpdateTask
 
 	if (!taskToUpdate) {
 		throw new Error('🦍 ❌ No task to update')
 	}
 
 	try {
-		const { searchParams } = new URL(request.url)
-		const updatePriority = searchParams.get('priority')
+		if (!taskToUpdate.id) {
+			throw new Error('🦍 ❌ No task id')
+		}
 
-		if (updatePriority !== undefined) {
-			if (!taskToUpdate.taskId) {
-				throw new Error('🦍 ❌ No task id')
-			}
-			if (taskToUpdate.priority === undefined) {
-				throw new Error('🦍 ❌ No priority')
-			}
-			const { rowCount } = await updateTaskPriority(
-				taskToUpdate.taskId,
-				taskToUpdate.priority
+		if (taskToUpdate.priority === undefined && taskToUpdate.name && taskToUpdate.description) {
+			throw new Error('🦍 ❌ No data to update')
+		}
+
+		if (taskToUpdate.priority !== undefined) {
+			const { rowCount } = await updateTaskPriority(taskToUpdate.id, taskToUpdate.priority)
+			if (rowCount !== 1) throw new Error('🦍 ❌ Could not update task')
+
+			return Response.json({ message: '🦍 ✅ Task priority updated' })
+		}
+
+		if (taskToUpdate.name !== undefined) {
+			const { rowCount } = await updateTaskName(taskToUpdate.id, taskToUpdate.name)
+			if (rowCount !== 1) throw new Error('🦍 ❌ Could not update task')
+
+			return Response.json({ message: '🦍 ✅ Task name updated' })
+		}
+
+		if (taskToUpdate.description !== undefined) {
+			const { rowCount } = await updateTaskDescription(
+				taskToUpdate.id,
+				taskToUpdate.description
 			)
 			if (rowCount !== 1) throw new Error('🦍 ❌ Could not update task')
 
-			return Response.json({ message: '🦍 ✅ Task updated' })
+			return Response.json({ message: '🦍 ✅ Task description updated' })
 		}
 
 		return Response.json({ message: '🦍 ❌ No update executed' })

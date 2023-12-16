@@ -3,24 +3,42 @@
 import { remove, update, usePerformActionByApi } from '@/lib/api'
 import { tasksEndpoint } from '..'
 
-export const useTaskActions = (taskId: Pick<Task, 'id'>['id']) => {
+export const useTaskActions = (id: Pick<Task, 'id'>['id']) => {
 	const { actionRunning, performAction } = usePerformActionByApi(tasksEndpoint)
 
 	const deleteTask = () => {
-		performAction(
-			() => remove(tasksEndpoint, { taskId }),
-			'Task deleted successfully',
-			'Error deleting task'
-		)
+		performAction({
+			action: () => remove(tasksEndpoint, { id }),
+			successMessage: 'Task deleted successfully',
+			errorMessage: 'Error deleting task',
+		})
 	}
 
-	const updateTaskPriority = (priority: number) => {
-		performAction(
-			() => update(`${tasksEndpoint}?priority`, { taskId, priority }),
-			'Task priority updated successfully',
-			'Error updating task priority'
-		)
+	const updateTaskPriority = (priority: Pick<UpdateTask, 'priority'>['priority']) => {
+		performAction({
+			action: () => update(`${tasksEndpoint}`, { id, priority }),
+			successMessage: 'Task priority updated successfully',
+			errorMessage: 'Error updating task priority',
+		})
 	}
 
-	return { actionRunning, deleteTask, updateTaskPriority }
+	const updateTaskName = (name: Pick<UpdateTask, 'name'>['name']) => {
+		performAction({
+			action: () => update(`${tasksEndpoint}`, { id, name }),
+			successMessage: 'Task name updated successfully',
+			errorMessage: 'Error updating task name',
+			toastOnSuccess: false,
+		})
+	}
+
+	const updateTaskDescription = (description: Pick<UpdateTask, 'description'>['description']) => {
+		performAction({
+			action: () => update(`${tasksEndpoint}`, { id, description }),
+			successMessage: 'Task description updated successfully',
+			errorMessage: 'Error updating task description',
+			toastOnSuccess: false,
+		})
+	}
+
+	return { actionRunning, deleteTask, updateTaskPriority, updateTaskName, updateTaskDescription }
 }

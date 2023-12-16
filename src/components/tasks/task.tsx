@@ -3,11 +3,24 @@
 import { useTaskActions } from '@/services'
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useState } from 'react'
 import { HiChevronDown, HiChevronUp, HiOutlineTrash } from 'react-icons/hi'
+import { useDebouncedCallback } from 'use-debounce'
 
 export const Task = ({ task }: { task: GetTask }) => {
 	const { id, name, description, priority, created_by_name, created_at } = task
-	const { actionRunning, deleteTask, updateTaskPriority } = useTaskActions(id)
+	const { actionRunning, deleteTask, updateTaskPriority, updateTaskName, updateTaskDescription } =
+		useTaskActions(id)
+	const [taskName, setTaskName] = useState(name)
+	const [taskDescription, setTaskDescription] = useState(description)
+
+	const updateTaskNameDebounced = useDebouncedCallback((newName) => {
+		updateTaskName(newName)
+	}, 3000)
+
+	const updateTaskDescriptionDebounced = useDebouncedCallback((newDescription) => {
+		updateTaskDescription(newDescription)
+	}, 3000)
 
 	return (
 		<AnimatePresence mode='wait'>
@@ -36,7 +49,11 @@ export const Task = ({ task }: { task: GetTask }) => {
 							<input
 								type='text'
 								className='flex-1 border-none bg-transparent text-xl focus:ring-0'
-								value={name}
+								value={taskName}
+								onChange={({ target: { value } }) => {
+									setTaskName(value)
+									updateTaskNameDebounced(value)
+								}}
 							/>
 							<div className='flex-center flex w-fit gap-2 self-end sm:self-start'>
 								<button
@@ -45,7 +62,7 @@ export const Task = ({ task }: { task: GetTask }) => {
 									onClick={() => updateTaskPriority((priority ?? 0) + 1)}
 									className={taskActionButtonStyle}
 								>
-									<HiChevronUp />
+									<HiChevronUp className='text-amber-600' />
 								</button>
 								<button
 									disabled={actionRunning}
@@ -53,7 +70,7 @@ export const Task = ({ task }: { task: GetTask }) => {
 									onClick={() => updateTaskPriority((priority ?? 0) - 1)}
 									className={taskActionButtonStyle}
 								>
-									<HiChevronDown />
+									<HiChevronDown className='text-amber-600' />
 								</button>
 								<button
 									disabled={actionRunning}
@@ -61,21 +78,21 @@ export const Task = ({ task }: { task: GetTask }) => {
 									onClick={deleteTask}
 									className={taskActionButtonStyle}
 								>
-									<HiOutlineTrash />
+									<HiOutlineTrash className='text-amber-600' />
 								</button>
 							</div>
 						</div>
-						{description && (
-							<textarea
-								name=''
-								id=''
-								cols={30}
-								rows={5}
-								value={description}
-								disabled={actionRunning}
-								className='border-none bg-transparent focus:ring-0'
-							/>
-						)}
+						<textarea
+							cols={0}
+							rows={0}
+							value={taskDescription}
+							onChange={({ target: { value } }) => {
+								setTaskDescription(value)
+								updateTaskDescriptionDebounced(value)
+							}}
+							disabled={actionRunning}
+							className='border-none bg-transparent focus:ring-0'
+						/>
 						<div className='flex flex-col justify-end gap-0.5 text-right text-base opacity-70 sm:flex-row'>
 							<span className='sm:mr-2 sm:border-r-2 sm:border-amber-300 sm:pr-2'>
 								{created_by_name}

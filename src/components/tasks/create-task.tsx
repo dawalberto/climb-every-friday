@@ -22,7 +22,7 @@ export const CreateTask = () => {
 		try {
 			setCreateTaskState({ loading: true, error: false })
 			const response = await create(tasksEndpoint, {
-				taskName,
+				name: taskName,
 				userId: (user as User).id ?? '',
 			})
 			if (!response.ok) {

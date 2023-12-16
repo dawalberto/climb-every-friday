@@ -1,7 +1,7 @@
 import { AuthProvider, Nav, SWRProvider } from '@/components'
 import SetVh from '@/components/set-vh/set-vh'
 import { khandFont } from '@/lib/constants'
-import { toasterStyles } from '@/lib/utils/styles'
+import { toasterClasses, toasterStyles } from '@/lib/utils/styles'
 import type { Metadata } from 'next'
 import { Toaster } from 'sonner'
 import './globals.css'
@@ -26,7 +26,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			<Toaster
 				toastOptions={{
 					unstyled: true,
-					classNames: toasterStyles,
+					classNames: toasterClasses,
+					style: toasterStyles,
 				}}
 			/>
 		</html>
