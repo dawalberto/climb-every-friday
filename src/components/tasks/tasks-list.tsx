@@ -1,6 +1,7 @@
 'use client'
 
 import { tasksEndpoint } from '@/services/tasks/tasks.endpoints'
+import { AnimatePresence, motion } from 'framer-motion'
 import useSWR from 'swr'
 import { Spinner } from '..'
 import { Task } from './task'
@@ -35,9 +36,13 @@ const List = ({ tasks, getTasksDone }: { tasks: GetTask[]; getTasksDone: boolean
 			</h1>
 			{filteredTasks.length !== 0 && (
 				<div className='flex flex-col gap-4 p-4'>
-					{filteredTasks.map((task) => (
-						<Task key={task.id} task={task} />
-					))}
+					<AnimatePresence>
+						{filteredTasks.map((task) => (
+							<motion.div layout key={task.id}>
+								<Task task={task} />
+							</motion.div>
+						))}
+					</AnimatePresence>
 				</div>
 			)}
 		</div>

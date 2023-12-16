@@ -1,5 +1,9 @@
-export const post = async (url = '', data = {}) => {
+export const create = async (url = '', data = {}) => {
 	return await configuredFetch('POST')(url, data)
+}
+
+export const update = async (url = '', data = {}) => {
+	return await configuredFetch('PUT')(url, data)
 }
 
 export const remove = async (url = '', data = {}) => {

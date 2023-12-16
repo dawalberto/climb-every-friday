@@ -1,35 +1,13 @@
 'use client'
 
-import { remove } from '@/lib'
-import { tasksEndpoint } from '@/services'
+import { useTaskActions } from '@/services'
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
 import { HiChevronDown, HiChevronUp, HiOutlineTrash } from 'react-icons/hi'
-import { toast } from 'sonner'
-import { mutate } from 'swr'
 
 export const Task = ({ task }: { task: GetTask }) => {
-	const { name, description, priority, created_by_name, created_at } = task
-	const [actionRunning, setActionRunning] = useState(false)
-
-	const deleteTask = async () => {
-		setActionRunning(true)
-		try {
-			const response = await remove(tasksEndpoint, {
-				taskId: task.id,
-			})
-			if (!response.ok) {
-				throw new Error(response.statusText)
-			}
-			mutate(tasksEndpoint)
-			toast.success('Task deleted successfully')
-		} catch (error) {
-			toast.error('Error deleting task')
-		} finally {
-			setActionRunning(false)
-		}
-	}
+	const { id, name, description, priority, created_by_name, created_at } = task
+	const { actionRunning, deleteTask, updateTaskPriority } = useTaskActions(id)
 
 	return (
 		<AnimatePresence mode='wait'>
@@ -64,6 +42,7 @@ export const Task = ({ task }: { task: GetTask }) => {
 								<button
 									disabled={actionRunning}
 									title='Prioritize'
+									onClick={() => updateTaskPriority((priority ?? 0) + 1)}
 									className={taskActionButtonStyle}
 								>
 									<HiChevronUp />
@@ -71,6 +50,7 @@ export const Task = ({ task }: { task: GetTask }) => {
 								<button
 									disabled={actionRunning}
 									title='Deprioritize'
+									onClick={() => updateTaskPriority((priority ?? 0) - 1)}
 									className={taskActionButtonStyle}
 								>
 									<HiChevronDown />

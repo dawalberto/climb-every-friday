@@ -1,4 +1,4 @@
-import { createTask, deleteTask, getTasks } from '@/services'
+import { createTask, deleteTask, getTasks, updateTaskPriority } from '@/services'
 
 export const POST = async (request: Request) => {
 	const taskToCreate = await request.json()
@@ -49,5 +49,39 @@ export const DELETE = async (request: Request) => {
 		return Response.json({ message: '🦍 ✅ Task deleted' })
 	} catch (error) {
 		return Response.json({ message: '🦍 ❌ Error deleting task' })
+	}
+}
+
+export const PUT = async (request: Request) => {
+	const taskToUpdate = await request.json()
+
+	if (!taskToUpdate) {
+		throw new Error('🦍 ❌ No task to update')
+	}
+
+	try {
+		const { searchParams } = new URL(request.url)
+		const updatePriority = searchParams.get('priority')
+
+		if (updatePriority !== undefined) {
+			if (!taskToUpdate.taskId) {
+				throw new Error('🦍 ❌ No task id')
+			}
+			if (taskToUpdate.priority === undefined) {
+				throw new Error('🦍 ❌ No priority')
+			}
+			const { rowCount } = await updateTaskPriority(
+				taskToUpdate.taskId,
+				taskToUpdate.priority
+			)
+			if (rowCount !== 1) throw new Error('🦍 ❌ Could not update task')
+
+			return Response.json({ message: '🦍 ✅ Task updated' })
+		}
+
+		return Response.json({ message: '🦍 ❌ No update executed' })
+	} catch (error) {
+		console.log('🦊 error', error)
+		return Response.json({ message: '🦍 ❌ Error updating task' })
 	}
 }
