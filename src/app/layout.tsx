@@ -1,7 +1,9 @@
-import { AuthProvider, Nav } from '@/components'
+import { AuthProvider, Nav, SWRProvider } from '@/components'
 import SetVh from '@/components/set-vh/set-vh'
 import { khandFont } from '@/lib/constants'
+import { toasterClasses, toasterStyles } from '@/lib/utils/styles'
 import type { Metadata } from 'next'
+import { Toaster } from 'sonner'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -13,12 +15,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang='en' className={khandFont.className}>
 			<AuthProvider>
-				<body className='bg-amber-50 text-lg text-amber-950'>
-					<Nav />
-					<div className='mx-auto max-w-7xl px-4 pt-20 sm:pt-3'>{children}</div>
-				</body>
+				<SWRProvider>
+					<body className='bg-amber-50 text-lg text-amber-950'>
+						<Nav />
+						<div className='mx-auto max-w-7xl px-4 pt-20 sm:pt-6'>{children}</div>
+					</body>
+				</SWRProvider>
 			</AuthProvider>
 			<SetVh />
+			<Toaster
+				toastOptions={{
+					unstyled: true,
+					classNames: toasterClasses,
+					style: toasterStyles,
+				}}
+			/>
 		</html>
 	)
 }

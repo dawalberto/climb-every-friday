@@ -1,4 +1,3 @@
-import { User } from '@/lib/types/user'
 import { getUserByEmail } from '@/services'
 import bcrypt from 'bcrypt'
 import NextAuth, { NextAuthOptions } from 'next-auth'

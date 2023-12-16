@@ -3,6 +3,7 @@ import { Disclosure, Menu } from '@headlessui/react'
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
+import React from 'react'
 import { GiStonePile } from 'react-icons/gi'
 import { GoMilestone } from 'react-icons/go'
 import { HiChevronDown } from 'react-icons/hi2'
@@ -47,6 +48,7 @@ export const useNavigation = ({
 
 		const Navigation = (
 			<div
+				key={parentPath + currentIteration}
 				className={clsx(
 					'flex',
 					currentIteration === 0
@@ -58,7 +60,7 @@ export const useNavigation = ({
 					const fullPath = `${parentPath}${path}`
 
 					return (
-						<>
+						<React.Fragment key={fullPath}>
 							{getCategory(category)}
 							<div
 								key={path}
@@ -113,7 +115,7 @@ export const useNavigation = ({
 														>
 															<Menu.Item
 																as='div'
-																className='rounded-sm bg-gradient-to-r from-amber-500 to-amber-300 shadow-lg'
+																className='rounded-md bg-gradient-to-r from-amber-500 to-amber-300 shadow-lg'
 															>
 																{({ close: closeMenu }) =>
 																	generateDesktopNavigation({
@@ -133,7 +135,7 @@ export const useNavigation = ({
 									)}
 								</AnimatePresence>
 							</div>
-						</>
+						</React.Fragment>
 					)
 				})}
 			</div>

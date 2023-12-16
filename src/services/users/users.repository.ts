@@ -1,4 +1,3 @@
-import { User } from '@/lib/types/user'
 import { sql } from '@vercel/postgres'
 
 export const getAllUsers = async () => {

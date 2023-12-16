@@ -1,6 +1,5 @@
 'use client'
 
-import { User } from '@/lib/types/user'
 import clsx from 'clsx'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -12,7 +11,7 @@ export default function LoginForm({ users }: { users: User[] }) {
 	const [formState, setFormState] = useState<FormDataState>({ state: 'idle' })
 	const router = useRouter()
 
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+	const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		setFormState({ state: 'loading' })
 		const formData = new FormData(event.currentTarget)
@@ -46,12 +45,12 @@ export default function LoginForm({ users }: { users: User[] }) {
 	}
 
 	return (
-		<form className='flex flex-col gap-1' onSubmit={handleSubmit}>
+		<form className='flex flex-col gap-1' onSubmit={handleOnSubmit}>
 			<select
 				name='email'
 				id='email'
 				required
-				className='rounded-sm  text-xl focus:border-amber-400 focus:ring-amber-400'
+				className='rounded-md  text-xl focus:border-amber-400 focus:ring-amber-400'
 			>
 				{users.map(({ id, name, email }) => (
 					<option key={id} value={email}>
@@ -66,11 +65,11 @@ export default function LoginForm({ users }: { users: User[] }) {
 				name='password'
 				required
 				minLength={6}
-				className='rounded-sm text-xl focus:border-amber-400 focus:ring-amber-400'
+				className='rounded-md text-xl focus:border-amber-400 focus:ring-amber-400'
 			/>
 			<button
 				className={clsx(
-					'flex-center flex w-full flex-row gap-2 rounded-b-sm bg-gradient-to-r from-amber-400 to-amber-500 px-4 py-2 text-xl text-white hover:from-amber-500 hover:to-amber-700 active:bg-amber-800 active:from-amber-600',
+					'flex-center flex w-full flex-row gap-2 rounded-md bg-gradient-to-r from-amber-400 to-amber-500 px-4 py-2 text-xl text-white hover:from-amber-500 hover:to-amber-700 active:bg-amber-800 active:from-amber-600',
 					'disabled:cursor-not-allowed disabled:from-amber-100 disabled:to-amber-300'
 				)}
 				disabled={formState.state === 'loading'}
