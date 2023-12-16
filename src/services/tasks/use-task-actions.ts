@@ -40,5 +40,21 @@ export const useTaskActions = (id: Pick<Task, 'id'>['id']) => {
 		})
 	}
 
-	return { actionRunning, deleteTask, updateTaskPriority, updateTaskName, updateTaskDescription }
+	const updateTaskState = (done: Pick<UpdateTask, 'done'>['done']) => {
+		performAction({
+			action: () => update(`${tasksEndpoint}`, { id, done }),
+			successMessage: 'Task state updated successfully',
+			errorMessage: 'Error updating task',
+			toastOnSuccess: false,
+		})
+	}
+
+	return {
+		actionRunning,
+		deleteTask,
+		updateTaskPriority,
+		updateTaskName,
+		updateTaskDescription,
+		updateTaskState,
+	}
 }

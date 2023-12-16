@@ -5,6 +5,7 @@ import {
 	updateTaskDescription,
 	updateTaskName,
 	updateTaskPriority,
+	updateTaskState,
 } from '@/services'
 
 export const POST = async (request: Request) => {
@@ -97,6 +98,13 @@ export const PUT = async (request: Request) => {
 			if (rowCount !== 1) throw new Error('🦍 ❌ Could not update task')
 
 			return Response.json({ message: '🦍 ✅ Task description updated' })
+		}
+
+		if (taskToUpdate.done !== undefined) {
+			const { rowCount } = await updateTaskState(taskToUpdate.id, taskToUpdate.done)
+			if (rowCount !== 1) throw new Error('🦍 ❌ Could not update task')
+
+			return Response.json({ message: '🦍 ✅ Task state updated' })
 		}
 
 		return Response.json({ message: '🦍 ❌ No update executed' })
