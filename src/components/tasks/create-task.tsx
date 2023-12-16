@@ -63,7 +63,7 @@ export const CreateTask = () => {
 				buttonStyle='primary'
 				className={clsx(
 					'flex-1',
-					'rounded-b-md',
+					'rounded-b-md rounded-t-none',
 					'sm:rounded-l-none sm:rounded-r-md',
 					createTaskState.error && 'border-2 border-red-500',
 					!createTaskState.error && 'border-none'
