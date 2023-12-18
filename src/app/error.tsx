@@ -14,8 +14,8 @@ export default function Error({
 		<div className='absolute-center h-auto w-full sm:w-1/2'>
 			<div className='flex-center flex flex-col gap-6'>
 				<Image
-					src='/internal-server-error-500-amico.svg'
-					alt='actors card image'
+					src='/internal-server-error-500.svg'
+					alt='Internal server error'
 					sizes='100%'
 					width={0}
 					height={0}

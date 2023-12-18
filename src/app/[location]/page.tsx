@@ -1,3 +1,3 @@
 export default function Locations() {
-	return <div>Locations</div>
+	return <div>Location</div>
 }
