@@ -37,3 +37,4 @@ next-env.d.ts
 
 # custom
 /src/scripts/seed.js
+public/tmp/*
