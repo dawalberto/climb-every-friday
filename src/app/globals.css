@@ -20,7 +20,6 @@
 		/* --vh variable is being set in the <SetVh> component */
 		/* When unit 'dvh' supported this part will be replaced with height: 100dvh */
 	}
-	/* absolute-center */
 	.absolute-center {
 		@apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform;
 	}

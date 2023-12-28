@@ -16,7 +16,7 @@ export const useTaskActions = (id: Pick<Task, 'id'>['id']) => {
 
 	const updateTaskPriority = (priority: Pick<UpdateTask, 'priority'>['priority']) => {
 		performAction({
-			action: () => update(`${tasksEndpoint}`, { id, priority }),
+			action: () => update(tasksEndpoint, { id, priority }),
 			successMessage: 'Task priority updated successfully',
 			errorMessage: 'Error updating task priority',
 		})
@@ -24,7 +24,7 @@ export const useTaskActions = (id: Pick<Task, 'id'>['id']) => {
 
 	const updateTaskName = (name: Pick<UpdateTask, 'name'>['name']) => {
 		performAction({
-			action: () => update(`${tasksEndpoint}`, { id, name }),
+			action: () => update(tasksEndpoint, { id, name }),
 			successMessage: 'Task name updated successfully',
 			errorMessage: 'Error updating task name',
 			toastOnSuccess: false,
@@ -33,7 +33,7 @@ export const useTaskActions = (id: Pick<Task, 'id'>['id']) => {
 
 	const updateTaskDescription = (description: Pick<UpdateTask, 'description'>['description']) => {
 		performAction({
-			action: () => update(`${tasksEndpoint}`, { id, description }),
+			action: () => update(tasksEndpoint, { id, description }),
 			successMessage: 'Task description updated successfully',
 			errorMessage: 'Error updating task description',
 			toastOnSuccess: false,
@@ -42,7 +42,7 @@ export const useTaskActions = (id: Pick<Task, 'id'>['id']) => {
 
 	const updateTaskState = (done: Pick<UpdateTask, 'done'>['done']) => {
 		performAction({
-			action: () => update(`${tasksEndpoint}`, { id, done }),
+			action: () => update(tasksEndpoint, { id, done }),
 			successMessage: 'Task state updated successfully',
 			errorMessage: 'Error updating task',
 			toastOnSuccess: done,
