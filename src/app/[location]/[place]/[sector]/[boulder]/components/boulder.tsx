@@ -5,7 +5,7 @@ import { RouteSide, Route as RouteType } from '@/lib/models/routes'
 import Image from 'next/image'
 import { useCallback, useState } from 'react'
 import { GiStonePile } from 'react-icons/gi'
-import { Route } from './route'
+import { Route } from './route-component'
 
 type BoulderOptions = {
 	name: Pick<Boulder, 'name'>['name']
