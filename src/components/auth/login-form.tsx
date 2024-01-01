@@ -64,7 +64,7 @@ export default function LoginForm({ users }: { users: User[] }) {
 				id='password'
 				name='password'
 				required
-				minLength={6}
+				minLength={5}
 				className='rounded-md text-xl focus:border-amber-400 focus:ring-amber-400'
 			/>
 			<button

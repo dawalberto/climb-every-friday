@@ -1,7 +1,7 @@
 'use client'
 
 import clsx from 'clsx'
-import { buttonPrimary } from './styles'
+import { buttonPrimary, buttonSuccess } from './styles'
 
 export const Button = ({
 	className,
@@ -15,10 +15,11 @@ export const Button = ({
 	return (
 		<button
 			className={clsx(
-				'flex-center flex flex-row gap-2 rounded-md px-4 py-2 text-xl',
+				'flex-center flex flex-row gap-2 rounded-md text-xl',
 				'disabled:cursor-not-allowed',
 				className,
-				buttonStyle === 'primary' && buttonPrimary
+				buttonStyle === 'primary' && buttonPrimary,
+				buttonStyle === 'success' && buttonSuccess
 			)}
 			disabled={disabled}
 			onClick={onClick}

@@ -15,7 +15,7 @@ export default async function BoulderPage({ params }: { params: { boulder: strin
 
 	return (
 		<div className='flex flex-col gap-2'>
-			<Boulder id={id} name={name} routes={routes} />
+			<Boulder name={name} routes={routes} />
 			{/* ROUTES */}
 		</div>
 	)

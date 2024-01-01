@@ -1,6 +1,6 @@
 'use client'
 
-import { Position, useElementClickPositions } from '@/hooks'
+import { Position, useElementClickPositions, useUserRole } from '@/hooks'
 import { RouteSide, Route as RouteType } from '@/lib/models/routes'
 import Image from 'next/image'
 import { useCallback, useState } from 'react'
@@ -8,14 +8,14 @@ import { GiStonePile } from 'react-icons/gi'
 import { Route } from './route'
 
 type BoulderOptions = {
-	id: Pick<Boulder, 'id'>['id']
 	name: Pick<Boulder, 'name'>['name']
 	routes: RouteType[]
 }
 
-export const Boulder = ({ id, name, routes }: BoulderOptions) => {
+export const Boulder = ({ name, routes }: BoulderOptions) => {
 	const { elementRef, handleClick } = useElementClickPositions<HTMLDivElement>()
 	const [coordinates, setCoordinates] = useState<Position[]>([])
+	const { userIsAdmin } = useUserRole()
 
 	const handleClickWithPositions = useCallback(
 		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -76,7 +76,7 @@ export const Boulder = ({ id, name, routes }: BoulderOptions) => {
 				{routes
 					.filter((route) => route.side === RouteSide.A)
 					.map((route) => (
-						<Route key={route.id} route={route} />
+						<Route key={route.id} route={route} userCanEdit={userIsAdmin} />
 					))}
 			</div>
 		</>
