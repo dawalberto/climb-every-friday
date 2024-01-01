@@ -6,3 +6,5 @@ export * from './tasks/use-task-actions'
 export * from './users/users.repository'
 // BOULDERS
 export * from './boulders/boulders.repository'
+// ROUTES
+export * from './routes/routes.repository'

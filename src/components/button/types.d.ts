@@ -5,4 +5,5 @@ type ButtonOptions = {
 	buttonStyle?: 'primary'
 	onClick?: () => void
 	type?: 'button' | 'submit' | 'reset'
+	title?: string
 }

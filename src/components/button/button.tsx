@@ -10,11 +10,12 @@ export const Button = ({
 	buttonStyle,
 	onClick,
 	type = 'button',
+	title,
 }: ButtonOptions) => {
 	return (
 		<button
 			className={clsx(
-				'flex-center flex w-full flex-row gap-2 rounded-md px-4 py-2 text-xl',
+				'flex-center flex flex-row gap-2 rounded-md px-4 py-2 text-xl',
 				'disabled:cursor-not-allowed',
 				className,
 				buttonStyle === 'primary' && buttonPrimary
@@ -22,6 +23,7 @@ export const Button = ({
 			disabled={disabled}
 			onClick={onClick}
 			type={type}
+			title={title}
 		>
 			{children}
 		</button>
