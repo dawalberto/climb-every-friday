@@ -4,6 +4,7 @@ import { Button } from '@/components'
 import { Route as RouteType } from '@/lib/models/routes'
 import { useRoutesActions } from '@/services'
 import clsx from 'clsx'
+import _isEqual from 'lodash/isEqual'
 import { useCallback, useMemo, useState } from 'react'
 import { FaRegSave } from 'react-icons/fa'
 import { FaRegStar } from 'react-icons/fa6'
@@ -19,10 +20,12 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 
 	const handleOnClickEditButton = useCallback(() => {
 		setEditMode((edit) => !edit)
-		if (editMode) {
+		const routeUpdated = _isEqual(route, updatedRoute)
+
+		if (editMode && !routeUpdated) {
 			updateRoute(updatedRoute)
 		}
-	}, [editMode, updateRoute, updatedRoute])
+	}, [editMode, route, updateRoute, updatedRoute])
 
 	const handleOnChangeRouteSit = () => {
 		setUpdatedRoute((route) => ({ ...route, sit: !route.sit }))

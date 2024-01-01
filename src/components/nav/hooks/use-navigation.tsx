@@ -23,7 +23,7 @@ export const useNavigation = ({
 		closeSubroutes = [],
 		currentIteration = 0,
 	}: {
-		routes: Route[]
+		routes: RouteNavigation[]
 		parentPath?: string
 		close?: () => void
 		closeSubroutes?: (() => void)[]
@@ -150,7 +150,7 @@ export const useNavigation = ({
 		parentPath = '',
 		currentIteration = 0,
 	}: {
-		routes: Route[]
+		routes: RouteNavigation[]
 		parentPath?: string
 		currentIteration?: number
 	}) => {
@@ -233,7 +233,7 @@ export const useNavigation = ({
 		return Navigation
 	}
 
-	const getCategory = (category?: Pick<Route, 'category'>['category']) => {
+	const getCategory = (category?: Pick<RouteNavigation, 'category'>['category']) => {
 		switch (category) {
 			case 'sector':
 				if (navigationType === 'desktop') {

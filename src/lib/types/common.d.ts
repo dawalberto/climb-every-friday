@@ -9,5 +9,5 @@ type RouteNavigation = {
 	name: string
 	path: string
 	category?: 'location' | 'place' | 'sector' | 'boulder'
-	subRoutes?: Route[]
+	subRoutes?: RouteNavigation[]
 }
