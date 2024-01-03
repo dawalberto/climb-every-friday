@@ -1,4 +1,5 @@
-import { AuthProvider, Nav, SWRProvider } from '@/components/UI'
+import { Nav } from '@/components/UI'
+import { AuthProvider, SWRProvider } from '@/components/providers'
 import { khandFont } from '@/lib/constants'
 import { toasterClasses, toasterStyles } from '@/lib/utils/styles'
 import type { Metadata } from 'next'
