@@ -1,5 +1,4 @@
-import { AuthProvider, Nav, SWRProvider } from '@/components'
-import SetVh from '@/components/set-vh/set-vh'
+import { AuthProvider, Nav, SWRProvider } from '@/components/UI'
 import { khandFont } from '@/lib/constants'
 import { toasterClasses, toasterStyles } from '@/lib/utils/styles'
 import type { Metadata } from 'next'
@@ -22,7 +21,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					</body>
 				</SWRProvider>
 			</AuthProvider>
-			<SetVh />
 			<Toaster
 				toastOptions={{
 					unstyled: true,

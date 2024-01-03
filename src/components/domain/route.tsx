@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components'
+import { Button } from '@/components/UI'
 import { Route as RouteType } from '@/lib/models/routes'
 import { useRoutesActions } from '@/services'
 import clsx from 'clsx'
@@ -13,19 +13,36 @@ import { HiPencilSquare } from 'react-icons/hi2'
 import { PiBezierCurveBold } from 'react-icons/pi'
 import { TbArmchair, TbRoute2 } from 'react-icons/tb'
 
-export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: boolean }) => {
+export const Route = ({
+	route,
+	userCanEdit,
+	onRouteChangeEditMode,
+}: {
+	route: RouteType
+	userCanEdit: boolean
+	onRouteChangeEditMode: (inEditMode: boolean) => void
+}) => {
 	const [editMode, setEditMode] = useState(false)
 	const [updatedRoute, setUpdatedRoute] = useState<RouteType>(route)
 	const { actionRunning, updateRoute } = useRoutesActions()
 
 	const handleOnClickEditButton = useCallback(() => {
 		setEditMode((edit) => !edit)
+		onRouteChangeEditMode(!editMode)
 		const routeUpdated = _isEqual(route, updatedRoute)
 
 		if (editMode && !routeUpdated) {
 			updateRoute(updatedRoute)
 		}
-	}, [editMode, route, updateRoute, updatedRoute])
+	}, [editMode, onRouteChangeEditMode, route, updateRoute, updatedRoute])
+
+	const handleOnChangeRouteName = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setUpdatedRoute((route) => ({ ...route, name: event.target.value }))
+	}
+
+	const handleOnChangeRouteGrade = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setUpdatedRoute((route) => ({ ...route, grade: event.target.value }))
+	}
 
 	const handleOnChangeRouteSit = () => {
 		setUpdatedRoute((route) => ({ ...route, sit: !route.sit }))
@@ -55,18 +72,14 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 						type='text'
 						className='border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0'
 						value={updatedRoute.name}
-						onChange={(event) =>
-							setUpdatedRoute((route) => ({ ...route, name: event.target.value }))
-						}
+						onChange={handleOnChangeRouteName}
 						placeholder='Route name'
 					/>
 					<input
 						type='text'
 						className='max-w-24 border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0'
 						value={updatedRoute.grade}
-						onChange={(event) =>
-							setUpdatedRoute((route) => ({ ...route, grade: event.target.value }))
-						}
+						onChange={handleOnChangeRouteGrade}
 						placeholder='Route grade'
 					/>
 					<TbArmchair
@@ -93,11 +106,11 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 				</>
 			) : (
 				<>
-					<span>{updatedRoute.name}</span>
-					<span className='font-semibold'>{updatedRoute.grade}</span>
-					{updatedRoute.sit && <TbArmchair title='Sit' />}
-					{updatedRoute.star && <FaRegStar title='Star' />}
-					{updatedRoute.crossing && (
+					<span>{route.name}</span>
+					<span className='font-semibold'>{route.grade}</span>
+					{route.sit && <TbArmchair title='Sit' />}
+					{route.star && <FaRegStar title='Star' />}
+					{route.crossing && (
 						<PiBezierCurveBold title='Crossing (trave)' className='rotate-180' />
 					)}
 				</>

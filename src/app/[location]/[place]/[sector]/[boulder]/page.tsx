@@ -1,6 +1,6 @@
-import { NotFound } from '@/components'
+import { NotFound } from '@/components/UI'
+import { Boulder } from '@/components/domain'
 import { getBoulderByIdentifierName, getRoutesByBoulderId } from '@/services'
-import { Boulder } from './components/boulder'
 
 export default async function BoulderPage({ params }: { params: { boulder: string } }) {
 	const boulderToFind = params.boulder

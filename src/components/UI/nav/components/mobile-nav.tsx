@@ -77,7 +77,7 @@ export const MobileNav = () => {
 						animate={navAnimationVariants.open}
 						exit={navAnimationVariants.closed}
 						transition={{ duration: 0.2 }}
-						className='heigh-mobile-menu fixed left-0 top-16 z-30 flex w-full flex-col items-center gap-7 overflow-y-scroll bg-gradient-to-r from-amber-300 to-amber-500 pt-6'
+						className='fixed left-0 top-16 z-30 flex h-dvh w-full flex-col items-center gap-7 overflow-y-scroll bg-gradient-to-r from-amber-300 to-amber-500 pt-6'
 					>
 						{navigation}
 					</motion.div>

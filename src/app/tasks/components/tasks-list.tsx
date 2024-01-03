@@ -3,7 +3,7 @@
 import { tasksEndpoint } from '@/services/tasks/tasks.endpoints'
 import { AnimatePresence, motion } from 'framer-motion'
 import useSWR from 'swr'
-import { Spinner } from '../../../components'
+import { Spinner } from '../../../components/UI'
 import { Task } from './task'
 
 export const TasksList = () => {

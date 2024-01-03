@@ -5,7 +5,7 @@ import { RouteSide, Route as RouteType } from '@/lib/models/routes'
 import Image from 'next/image'
 import { useCallback, useState } from 'react'
 import { GiStonePile } from 'react-icons/gi'
-import { Route } from './route-component'
+import { Route } from './route'
 
 type BoulderOptions = {
 	name: Pick<Boulder, 'name'>['name']
@@ -20,13 +20,16 @@ export const Boulder = ({ name, routes }: BoulderOptions) => {
 	const handleClickWithPositions = useCallback(
 		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
 			const positionClicked = handleClick(event)
-			const position = positionClicked && { x: positionClicked.x, y: positionClicked.y }
-			if (position) {
-				setCoordinates((prevPositions) => [...prevPositions, position])
+			if (positionClicked) {
+				setCoordinates((prevPositions) => [...prevPositions, positionClicked])
 			}
 		},
 		[handleClick]
 	)
+
+	const handleOnRouteChangeEditMode = useCallback((inEditMode: boolean) => {
+		console.log('inEditMode', inEditMode)
+	}, [])
 
 	return (
 		<>
@@ -71,12 +74,25 @@ export const Boulder = ({ name, routes }: BoulderOptions) => {
 							return null
 						})}
 				</svg>
+				<div className='absolute bottom-2 left-2 flex gap-2'>
+					<button className='bg-red-400' title='remove route'>
+						❌
+					</button>
+					<button className='bg-green-400' title='add route'>
+						➕
+					</button>
+				</div>
 			</div>
 			<div className='mt-6 flex-col space-y-3'>
 				{routes
 					.filter((route) => route.side === RouteSide.A)
 					.map((route) => (
-						<Route key={route.id} route={route} userCanEdit={userIsAdmin} />
+						<Route
+							key={route.id}
+							route={route}
+							userCanEdit={userIsAdmin}
+							onRouteChangeEditMode={handleOnRouteChangeEditMode}
+						/>
 					))}
 			</div>
 		</>

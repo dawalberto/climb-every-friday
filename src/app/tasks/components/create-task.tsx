@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components'
+import { Button } from '@/components/UI'
 import { create } from '@/lib/api'
 import { tasksEndpoint } from '@/services/tasks/tasks.endpoints'
 import clsx from 'clsx'
