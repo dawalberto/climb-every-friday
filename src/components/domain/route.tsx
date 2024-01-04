@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from '@/components/UI'
 import { Route as RouteType } from '@/lib/models/routes'
 import { useRoutesActions } from '@/services'
 import clsx from 'clsx'
@@ -12,29 +11,41 @@ import { GiMountaintop } from 'react-icons/gi'
 import { HiPencilSquare } from 'react-icons/hi2'
 import { PiBezierCurveBold } from 'react-icons/pi'
 import { TbArmchair, TbRoute2 } from 'react-icons/tb'
+import { Button } from '../UI'
 
+type EditingRoute = { id?: string; inEditMode: false } | { id: string; inEditMode: true }
 export const Route = ({
 	route,
+	editingRoute,
+	setEditingRoute,
 	userCanEdit,
-	onRouteChangeEditMode,
 }: {
 	route: RouteType
+	editingRoute: EditingRoute
+	setEditingRoute: (editing: EditingRoute) => void
 	userCanEdit: boolean
-	onRouteChangeEditMode: (inEditMode: boolean) => void
 }) => {
-	const [editMode, setEditMode] = useState(false)
-	const [updatedRoute, setUpdatedRoute] = useState<RouteType>(route)
 	const { actionRunning, updateRoute } = useRoutesActions()
+	const [updatedRoute, setUpdatedRoute] = useState<RouteType>(route)
+
+	const isInEditMode = useMemo(
+		() => editingRoute.inEditMode && editingRoute.id === route.id,
+		[editingRoute, route]
+	)
 
 	const handleOnClickEditButton = useCallback(() => {
-		setEditMode((edit) => !edit)
-		onRouteChangeEditMode(!editMode)
+		if (isInEditMode) {
+			setEditingRoute({ inEditMode: false })
+		} else {
+			setEditingRoute({ id: route.id, inEditMode: true })
+		}
+
 		const routeUpdated = _isEqual(route, updatedRoute)
 
-		if (editMode && !routeUpdated) {
+		if (isInEditMode && !routeUpdated) {
 			updateRoute(updatedRoute)
 		}
-	}, [editMode, onRouteChangeEditMode, route, updateRoute, updatedRoute])
+	}, [isInEditMode, route, setEditingRoute, updateRoute, updatedRoute])
 
 	const handleOnChangeRouteName = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setUpdatedRoute((route) => ({ ...route, name: event.target.value }))
@@ -56,17 +67,26 @@ export const Route = ({
 		setUpdatedRoute((route) => ({ ...route, crossing: !route.crossing }))
 	}
 
-	const buttonContent = useMemo(() => {
+	const buttonEditContent = useMemo(() => {
+		let icon = <HiPencilSquare className='size-6' />
+
 		if (actionRunning) {
-			return <GiMountaintop className='size-6 animate-spin' />
+			icon = <GiMountaintop className='size-6 animate-spin' />
+		} else {
+			if (isInEditMode) {
+				icon = <FaRegSave className='size-6' />
+			} else {
+				icon = <HiPencilSquare className='size-6' />
+			}
 		}
-		return editMode ? <FaRegSave className='size-6' /> : <HiPencilSquare className='size-6' />
-	}, [editMode, actionRunning])
+
+		return icon
+	}, [actionRunning, isInEditMode])
 
 	return (
 		<div className='flex items-center gap-2 text-2xl'>
 			<TbRoute2 className='-scale-x-[1]' />
-			{editMode ? (
+			{isInEditMode ? (
 				<>
 					<input
 						type='text'
@@ -117,13 +137,13 @@ export const Route = ({
 			)}
 			{userCanEdit && (
 				<Button
-					buttonStyle={editMode ? 'success' : 'primary'}
+					buttonStyle={isInEditMode ? 'success' : 'primary'}
 					title='Edit route'
 					className='size-9 text-yellow-950 shadow-md'
 					onClick={handleOnClickEditButton}
 					disabled={actionRunning}
 				>
-					{buttonContent}
+					{buttonEditContent}
 				</Button>
 			)}
 		</div>

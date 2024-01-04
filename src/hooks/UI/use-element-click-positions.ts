@@ -2,7 +2,6 @@
 
 import { useCallback, useRef } from 'react'
 
-export type Position = { x: number; y: number }
 export const useElementClickPositions = <T extends HTMLElement>() => {
 	const elementRef = useRef<T>(null)
 
@@ -21,3 +20,5 @@ export const useElementClickPositions = <T extends HTMLElement>() => {
 
 	return { elementRef, handleClick }
 }
+
+export type Position = { x: number; y: number }

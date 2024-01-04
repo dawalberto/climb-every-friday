@@ -25,7 +25,7 @@ export default function Error({
 				<h1 className='text-2xl font-semibold tracking-wide'>
 					Sorry, something went wrong =(
 				</h1>
-				<Button buttonStyle='primary' onClick={reset}>
+				<Button buttonStyle='primary' className='w-full px-4 py-2 text-xl' onClick={reset}>
 					<span>Try again</span>
 				</Button>
 			</div>

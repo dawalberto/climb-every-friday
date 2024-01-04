@@ -1,11 +1,11 @@
 'use client'
 
-import { Position, useElementClickPositions, useUserRole } from '@/hooks'
+import { Position, useElementClickPositions } from '@/hooks/UI'
+import { useRoute } from '@/hooks/domain'
 import { RouteSide, Route as RouteType } from '@/lib/models/routes'
 import Image from 'next/image'
 import { useCallback, useState } from 'react'
 import { GiStonePile } from 'react-icons/gi'
-import { Route } from './route'
 
 type BoulderOptions = {
 	name: Pick<Boulder, 'name'>['name']
@@ -14,22 +14,22 @@ type BoulderOptions = {
 
 export const Boulder = ({ name, routes }: BoulderOptions) => {
 	const { elementRef, handleClick } = useElementClickPositions<HTMLDivElement>()
-	const [coordinates, setCoordinates] = useState<Position[]>([])
-	const { userIsAdmin } = useUserRole()
+	const [routesCoordinates, setRoutesCoordinates] = useState<Position[]>([])
+	const { RouteComponent: Route, editingRoute } = useRoute()
 
 	const handleClickWithPositions = useCallback(
 		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+			console.log('🦊 editingRoute', editingRoute)
+			if (!editingRoute.inEditMode) {
+				return
+			}
 			const positionClicked = handleClick(event)
 			if (positionClicked) {
-				setCoordinates((prevPositions) => [...prevPositions, positionClicked])
+				setRoutesCoordinates((prevPositions) => [...prevPositions, positionClicked])
 			}
 		},
-		[handleClick]
+		[editingRoute, handleClick]
 	)
-
-	const handleOnRouteChangeEditMode = useCallback((inEditMode: boolean) => {
-		console.log('inEditMode', inEditMode)
-	}, [])
 
 	return (
 		<>
@@ -54,16 +54,16 @@ export const Boulder = ({ name, routes }: BoulderOptions) => {
 				<svg
 					style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
 				>
-					{coordinates.length >= 2 &&
-						coordinates.map((position, index) => {
-							if (index < coordinates.length - 1) {
+					{routesCoordinates.length >= 2 &&
+						routesCoordinates.map((position, index) => {
+							if (index < routesCoordinates.length - 1) {
 								return (
 									<line
 										key={index}
 										x1={`${position.x}%`}
 										y1={`${position.y}%`}
-										x2={`${coordinates[index + 1].x}%`}
-										y2={`${coordinates[index + 1].y}%`}
+										x2={`${routesCoordinates[index + 1].x}%`}
+										y2={`${routesCoordinates[index + 1].y}%`}
 										stroke='#F59E0B'
 										strokeWidth={4}
 										strokeLinecap='round'
@@ -87,12 +87,7 @@ export const Boulder = ({ name, routes }: BoulderOptions) => {
 				{routes
 					.filter((route) => route.side === RouteSide.A)
 					.map((route) => (
-						<Route
-							key={route.id}
-							route={route}
-							userCanEdit={userIsAdmin}
-							onRouteChangeEditMode={handleOnRouteChangeEditMode}
-						/>
+						<Route key={route.id} route={route} />
 					))}
 			</div>
 		</>
