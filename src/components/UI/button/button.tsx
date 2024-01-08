@@ -1,7 +1,7 @@
 'use client'
 
 import clsx from 'clsx'
-import { buttonPrimary, buttonSuccess } from './styles'
+import { buttonDanger, buttonPrimary, buttonSuccess } from './styles'
 
 export const Button = ({
 	className,
@@ -19,7 +19,8 @@ export const Button = ({
 				'disabled:cursor-not-allowed',
 				className,
 				buttonStyle === 'primary' && buttonPrimary,
-				buttonStyle === 'success' && buttonSuccess
+				buttonStyle === 'success' && buttonSuccess,
+				buttonStyle === 'danger' && buttonDanger
 			)}
 			disabled={disabled}
 			onClick={onClick}
