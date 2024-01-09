@@ -1,6 +1,7 @@
 'use client'
 
 import { Route } from '@/components/domain'
+import { gradesWithColors } from '@/lib/constants'
 import { Route as RouteType } from '@/lib/models/routes'
 import { memo, useState } from 'react'
 import { useUserRole } from '.'
@@ -22,8 +23,13 @@ export const useRoute = () => {
 		/>
 	)
 
+	const getRouteGradeColor = (grade: Pick<RouteType, 'grade'>['grade']) => {
+		return gradesWithColors.find((gradeWithColor) => gradeWithColor.grade === grade)?.colors
+	}
+
 	return {
 		RouteComponent,
+		getRouteGradeColor,
 		editingRoute,
 	}
 }

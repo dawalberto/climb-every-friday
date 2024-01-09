@@ -4,12 +4,12 @@ import { Position, useElementClickPositions } from '@/hooks/UI'
 import { useRoute } from '@/hooks/domain'
 import { RouteSide, Route as RouteType } from '@/lib/models/routes'
 import Image from 'next/image'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { FaRegSave } from 'react-icons/fa'
 import { GiStonePile } from 'react-icons/gi'
 import { HiOutlineInformationCircle } from 'react-icons/hi'
 import { LuEraser } from 'react-icons/lu'
-import { Button } from '../UI'
+import { Button, SvgLineDrawer } from '../UI'
 
 type BoulderOptions = {
 	name: Pick<Boulder, 'name'>['name']
@@ -18,21 +18,67 @@ type BoulderOptions = {
 
 export const Boulder = ({ name, routes }: BoulderOptions) => {
 	const { elementRef, handleClick } = useElementClickPositions<HTMLDivElement>()
-	const [routesCoordinates, setRoutesCoordinates] = useState<Position[]>([])
-	const { RouteComponent: Route, editingRoute } = useRoute()
+	const [routesCoordinates, setRoutesCoordinates] = useState<
+		{ routeId: string; coordinates: Position[] }[]
+	>([])
+	const { RouteComponent: Route, editingRoute, getRouteGradeColor } = useRoute()
 
 	const handleClickWithPositions = useCallback(
 		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
-			console.log('🦊 editingRoute', editingRoute)
 			if (!editingRoute.inEditMode) {
 				return
 			}
 			const positionClicked = handleClick(event)
 			if (positionClicked) {
-				setRoutesCoordinates((prevPositions) => [...prevPositions, positionClicked])
+				setRoutesCoordinates((prevPositions) => {
+					const routeId = editingRoute.id
+					const routeCoordinates = prevPositions.find(
+						(route) => route.routeId === routeId
+					)
+					if (routeCoordinates) {
+						routeCoordinates.coordinates.push(positionClicked)
+						return [...prevPositions]
+					}
+					return [...prevPositions, { routeId, coordinates: [positionClicked] }]
+				})
 			}
 		},
 		[editingRoute, handleClick]
+	)
+
+	const editingRouteCoordinates = useMemo(
+		() =>
+			routesCoordinates.find((route) => route.routeId === editingRoute.id)?.coordinates ?? [],
+		[editingRoute, routesCoordinates]
+	)
+
+	const eraseRouteCoordinates = useCallback((routeId: string) => {
+		setRoutesCoordinates((prevPositions) => {
+			const routeCoordinates = prevPositions.find((route) => route.routeId === routeId)
+			if (routeCoordinates) {
+				routeCoordinates.coordinates = []
+				return [...prevPositions]
+			}
+			return prevPositions
+		})
+	}, [])
+
+	const routeGradeColors = useCallback(
+		(routeId: Pick<RouteType, 'id'>['id']) => {
+			const route = routes.find((route) => route.id === routeId)
+			if (route) {
+				const colors = getRouteGradeColor(route.grade)
+				if (colors) {
+					return {
+						circleColor: colors[0],
+						lineColor: colors[1],
+					}
+				}
+			}
+
+			return undefined
+		},
+		[getRouteGradeColor, routes]
 	)
 
 	return (
@@ -55,41 +101,22 @@ export const Boulder = ({ name, routes }: BoulderOptions) => {
 					className='h-auto w-full rounded-md shadow-lg drop-shadow-lg'
 					priority
 				/>
-				<svg
-					style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-				>
-					{routesCoordinates.length > 0 &&
-						routesCoordinates.map((position, index) => {
-							return (
-								<circle
-									key={index}
-									cx={`${position.x}%`}
-									cy={`${position.y}%`}
-									r='6'
-									fill='#D97706'
-								/>
-							)
-						})}
-					{routesCoordinates.length >= 2 &&
-						routesCoordinates.map((position, index) => {
-							if (index < routesCoordinates.length - 1) {
-								return (
-									<line
-										key={index}
-										x1={`${position.x}%`}
-										y1={`${position.y}%`}
-										x2={`${routesCoordinates[index + 1].x}%`}
-										y2={`${routesCoordinates[index + 1].y}%`}
-										stroke='#F59E0B'
-										strokeWidth={4}
-										strokeLinecap='round'
-										strokeLinejoin='round'
-									/>
-								)
-							}
-							return null
-						})}
-				</svg>
+
+				{editingRoute.inEditMode ? (
+					<SvgLineDrawer
+						coordinates={editingRouteCoordinates}
+						colors={routeGradeColors(editingRoute.id)}
+					/>
+				) : (
+					routesCoordinates.map(({ routeId, coordinates }) => (
+						<SvgLineDrawer
+							key={routeId}
+							coordinates={coordinates}
+							colors={routeGradeColors(routeId)}
+						/>
+					))
+				)}
+
 				{editingRoute.inEditMode && (
 					<div className='absolute bottom-2 left-2 z-10 flex flex-col gap-2'>
 						<Button
@@ -98,8 +125,7 @@ export const Boulder = ({ name, routes }: BoulderOptions) => {
 							className='size-9 text-yellow-950 shadow-md hover:text-white'
 							onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
 								event.stopPropagation()
-								console.log('🦊 routesCoordinates', routesCoordinates)
-								setRoutesCoordinates([])
+								eraseRouteCoordinates(editingRoute.id)
 							}}
 							// disabled={actionRunning}
 						>
