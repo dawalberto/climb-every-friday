@@ -3,8 +3,9 @@
 import { Position, useElementClickPositions } from '@/hooks/UI'
 import { useRoute } from '@/hooks/domain'
 import { RouteSide, Route as RouteType } from '@/lib/models/routes'
+import { useRoutesStore } from '@/stores'
 import Image from 'next/image'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FaRegSave } from 'react-icons/fa'
 import { GiStonePile } from 'react-icons/gi'
 import { HiOutlineInformationCircle } from 'react-icons/hi'
@@ -13,15 +14,20 @@ import { Button, SvgLineDrawer } from '../UI'
 
 type BoulderOptions = {
 	name: Pick<Boulder, 'name'>['name']
+	sideAImageHref: Pick<Boulder, 'side_a_image_href'>['side_a_image_href']
 	routes: RouteType[]
 }
+export type RouteCoordinates = { routeId: string; coordinates: Position[] }
 
-export const Boulder = ({ name, routes }: BoulderOptions) => {
+export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 	const { elementRef, handleClick } = useElementClickPositions<HTMLDivElement>()
-	const [routesCoordinates, setRoutesCoordinates] = useState<
-		{ routeId: string; coordinates: Position[] }[]
-	>([])
+	const [routesCoordinates, setRoutesCoordinates] = useState<RouteCoordinates[]>([])
 	const { RouteComponent: Route, editingRoute, getRouteGradeColor } = useRoute()
+	// const setRouteCoordinatesInStore = useRoutesStore((state) => state.setRouteCoordinates)
+	const { setRouteCoordinates } = useRoutesStore()
+
+	// TODO - try with zustand instead of context
+	// TODO - save and get routes coordinates from DB
 
 	const handleClickWithPositions = useCallback(
 		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -30,21 +36,34 @@ export const Boulder = ({ name, routes }: BoulderOptions) => {
 			}
 			const positionClicked = handleClick(event)
 			if (positionClicked) {
-				setRoutesCoordinates((prevPositions) => {
+				setRoutesCoordinates((currentRoutes) => {
 					const routeId = editingRoute.id
-					const routeCoordinates = prevPositions.find(
-						(route) => route.routeId === routeId
-					)
-					if (routeCoordinates) {
-						routeCoordinates.coordinates.push(positionClicked)
-						return [...prevPositions]
+					const routeFound = currentRoutes.find((route) => route.routeId === routeId)
+					if (routeFound) {
+						const routesFiltered = currentRoutes.filter(
+							(route) => route.routeId !== routeId
+						)
+						const coordinates = [...routeFound.coordinates, positionClicked]
+						return [...routesFiltered, { routeId, coordinates }]
 					}
-					return [...prevPositions, { routeId, coordinates: [positionClicked] }]
+
+					return [...currentRoutes, { routeId, coordinates: [positionClicked] }]
 				})
 			}
 		},
 		[editingRoute, handleClick]
 	)
+
+	useEffect(() => {
+		const editingRouteCoordinates =
+			routesCoordinates.find((route) => route.routeId === editingRoute.id)?.coordinates ?? []
+
+		setRouteCoordinates({
+			routeId: editingRoute.id ?? '',
+			coordinates: [...editingRouteCoordinates],
+		})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [routesCoordinates])
 
 	const editingRouteCoordinates = useMemo(
 		() =>
@@ -52,16 +71,28 @@ export const Boulder = ({ name, routes }: BoulderOptions) => {
 		[editingRoute, routesCoordinates]
 	)
 
-	const eraseRouteCoordinates = useCallback((routeId: string) => {
-		setRoutesCoordinates((prevPositions) => {
-			const routeCoordinates = prevPositions.find((route) => route.routeId === routeId)
-			if (routeCoordinates) {
-				routeCoordinates.coordinates = []
-				return [...prevPositions]
+	const eraseRouteCoordinates = useCallback(
+		(routeId: string) => {
+			setRoutesCoordinates((currentRoutes) => {
+				const routeFound = currentRoutes.find((route) => route.routeId === routeId)
+				if (routeFound) {
+					const previousRoutesFiltered = currentRoutes.filter(
+						(route) => route.routeId !== routeId
+					)
+					return [...previousRoutesFiltered, { routeId, coordinates: [] }]
+				}
+				return currentRoutes
+			})
+
+			if (routeId === editingRoute.id) {
+				setRouteCoordinates({
+					routeId: editingRoute.id ?? '',
+					coordinates: [],
+				})
 			}
-			return prevPositions
-		})
-	}, [])
+		},
+		[editingRoute, setRouteCoordinates]
+	)
 
 	const routeGradeColors = useCallback(
 		(routeId: Pick<RouteType, 'id'>['id']) => {
@@ -93,7 +124,7 @@ export const Boulder = ({ name, routes }: BoulderOptions) => {
 				style={{ position: 'relative' }}
 			>
 				<Image
-					src='/tmp/tiburon.webp'
+					src={`/boulders/${sideAImageHref}`}
 					alt='Page not found'
 					sizes='100%'
 					width={0}

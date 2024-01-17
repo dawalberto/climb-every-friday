@@ -2,6 +2,7 @@
 
 import { Route as RouteType } from '@/lib/models/routes'
 import { useRoutesActions } from '@/services'
+import { useRoutesStore } from '@/stores'
 import clsx from 'clsx'
 import _isEqual from 'lodash/isEqual'
 import { useCallback, useMemo, useState } from 'react'
@@ -26,6 +27,7 @@ export const Route = ({
 	userCanEdit: boolean
 }) => {
 	const { actionRunning, updateRoute } = useRoutesActions()
+	const { routeCoordinates } = useRoutesStore()
 	const [updatedRoute, setUpdatedRoute] = useState<RouteType>(route)
 
 	const isInEditMode = useMemo(
@@ -40,12 +42,19 @@ export const Route = ({
 			setEditingRoute({ id: route.id, inEditMode: true })
 		}
 
+		if (routeCoordinates?.routeId === route.id) {
+			console.log('🦊 routeCoordinates', routeCoordinates)
+			console.log('🦊 updatedRoute', updatedRoute)
+		}
+
+		return
+
 		const routeUpdated = _isEqual(route, updatedRoute)
 
 		if (isInEditMode && !routeUpdated) {
 			updateRoute(updatedRoute)
 		}
-	}, [isInEditMode, route, setEditingRoute, updateRoute, updatedRoute])
+	}, [isInEditMode, route, setEditingRoute, updateRoute, updatedRoute, routeCoordinates])
 
 	const handleOnChangeRouteName = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setUpdatedRoute((route) => ({ ...route, name: event.target.value }))
