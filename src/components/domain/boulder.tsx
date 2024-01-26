@@ -30,15 +30,11 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 	const { RouteComponent: Route, editingRoute, getRouteGradeColor } = useRoute()
 	const { setRouteCoordinates } = useRoutesStore()
 
-	const handleClickWithPositions = useCallback(
-		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
-			if (!editingRoute.inEditMode) {
-				return
-			}
-			const positionClicked = handleClick(event)
-			if (positionClicked) {
+	const updateRoutesCoordinates = useCallback(
+		(positionClicked?: Position) => {
+			const routeId = editingRoute.id
+			if (positionClicked && routeId) {
 				setRoutesCoordinates((currentRoutes) => {
-					const routeId = editingRoute.id
 					const routeFound = currentRoutes.find((route) => route.routeId === routeId)
 					if (routeFound) {
 						const routesFiltered = currentRoutes.filter(
@@ -52,11 +48,21 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 				})
 			}
 		},
-		[editingRoute, handleClick]
+		[editingRoute]
 	)
 
-	// Edit current route coordinates in the store
-	useEffect(() => {
+	const handleClickWithPositions = useCallback(
+		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+			if (!editingRoute.inEditMode) {
+				return
+			}
+			const positionClicked = handleClick(event)
+			updateRoutesCoordinates(positionClicked)
+		},
+		[editingRoute, handleClick, updateRoutesCoordinates]
+	)
+
+	const updateEditingRouteCoordinatesInStore = useCallback(() => {
 		const editingRouteCoordinates =
 			routesCoordinates.find((route) => route.routeId === editingRoute.id)?.coordinates ?? []
 
@@ -64,6 +70,11 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 			routeId: editingRoute.id ?? '',
 			coordinates: [...editingRouteCoordinates],
 		})
+	}, [editingRoute, routesCoordinates, setRouteCoordinates])
+
+	// Edit current editing route coordinates in the store
+	useEffect(() => {
+		updateEditingRouteCoordinatesInStore()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [routesCoordinates])
 
@@ -131,7 +142,7 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 					sizes='100%'
 					width={0}
 					height={0}
-					className='h-auto w-full rounded-md shadow-lg drop-shadow-lg'
+					className='h-auto w-full shadow-lg drop-shadow-lg md:rounded-md'
 					priority
 				/>
 
