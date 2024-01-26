@@ -1,2 +1,2 @@
-export * from './boulder';
-export * from './route';
+export * from './boulder'
+export * from './routes'

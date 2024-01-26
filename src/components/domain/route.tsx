@@ -1,58 +1,54 @@
 'use client'
 
+import { useElementClickPositions } from '@/hooks/UI'
 import { Route as RouteType } from '@/lib/models/routes'
+import { getRouteGradeColorForSVGDrawing } from '@/lib/utils/routes'
 import { useRoutesActions } from '@/services'
-import { useRoutesStore } from '@/stores'
 import clsx from 'clsx'
 import _isEqual from 'lodash/isEqual'
+import Image from 'next/image'
 import { useCallback, useMemo, useState } from 'react'
 import { FaRegSave } from 'react-icons/fa'
 import { FaRegStar } from 'react-icons/fa6'
 import { GiMountaintop } from 'react-icons/gi'
-import { HiPencilSquare } from 'react-icons/hi2'
+import { HiOutlineInformationCircle, HiPencilSquare } from 'react-icons/hi2'
+import { LuEraser } from 'react-icons/lu'
 import { PiBezierCurveBold } from 'react-icons/pi'
 import { TbArmchair, TbRoute2 } from 'react-icons/tb'
-import { Button } from '../UI'
+import { Button, SvgLineDrawer } from '../UI'
 
-type EditingRoute = { id?: string; inEditMode: false } | { id: string; inEditMode: true }
-export const Route = ({
-	route,
-	editingRoute,
-	setEditingRoute,
-	userCanEdit,
-}: {
-	route: RouteType
-	editingRoute: EditingRoute
-	setEditingRoute: (editing: EditingRoute) => void
-	userCanEdit: boolean
-}) => {
+export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: boolean }) => {
+	const [editMode, setEditMode] = useState(false)
 	const { actionRunning, updateRoute } = useRoutesActions()
-	const { routeCoordinates } = useRoutesStore()
+	const { elementRef, handleClick } = useElementClickPositions<HTMLDivElement>()
 	const [updatedRoute, setUpdatedRoute] = useState<RouteType>(route)
 
-	const isInEditMode = useMemo(
-		() => editingRoute.inEditMode && editingRoute.id === route.id,
-		[editingRoute, route]
-	)
-
 	const handleOnClickEditButton = useCallback(() => {
-		if (isInEditMode) {
-			setEditingRoute({ inEditMode: false })
-		} else {
-			setEditingRoute({ id: route.id, inEditMode: true })
-		}
+		setEditMode((mode) => !mode)
 
-		const updatedRouteCopy = { ...updatedRoute }
-		if (routeCoordinates?.routeId === route.id) {
-			updatedRouteCopy.coordinates = routeCoordinates.coordinates
-		}
+		const routeIsNotUpdated = _isEqual(route, updatedRoute)
 
-		const routeUpdated = _isEqual(route, updatedRouteCopy)
-
-		if (isInEditMode && !routeUpdated) {
-			updateRoute(updatedRouteCopy)
+		if (editMode && !routeIsNotUpdated) {
+			updateRoute(updatedRoute)
 		}
-	}, [isInEditMode, route, setEditingRoute, updateRoute, updatedRoute, routeCoordinates])
+	}, [editMode, route, updateRoute, updatedRoute])
+
+	const handleOnChangeRouteCoordinates = useCallback(
+		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+			if (!editMode) {
+				return
+			}
+			const positionClicked = handleClick(event)
+			if (!positionClicked) {
+				return
+			}
+			setUpdatedRoute((route) => ({
+				...route,
+				coordinates: [...(route.coordinates ?? []), positionClicked],
+			}))
+		},
+		[editMode, handleClick]
+	)
 
 	const handleOnChangeRouteName = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setUpdatedRoute((route) => ({ ...route, name: event.target.value }))
@@ -80,7 +76,7 @@ export const Route = ({
 		if (actionRunning) {
 			icon = <GiMountaintop className='size-6 animate-spin' />
 		} else {
-			if (isInEditMode) {
+			if (editMode) {
 				icon = <FaRegSave className='size-6' />
 			} else {
 				icon = <HiPencilSquare className='size-6' />
@@ -88,71 +84,120 @@ export const Route = ({
 		}
 
 		return icon
-	}, [actionRunning, isInEditMode])
+	}, [actionRunning, editMode])
 
 	return (
-		<div className='flex items-center gap-2 text-2xl'>
-			<TbRoute2 className='-scale-x-[1]' />
-			{isInEditMode ? (
+		<>
+			{editMode && (
 				<>
-					<input
-						type='text'
-						className='border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0'
-						value={updatedRoute.name}
-						onChange={handleOnChangeRouteName}
-						placeholder='Route name'
-					/>
-					<input
-						type='text'
-						className='max-w-24 border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0'
-						value={updatedRoute.grade}
-						onChange={handleOnChangeRouteGrade}
-						placeholder='Route grade'
-					/>
-					<TbArmchair
-						onClick={handleOnChangeRouteSit}
-						className={clsx(
-							'cursor-pointer transition-all duration-300',
-							updatedRoute.sit ? 'text-amber-500' : 'opacity-40'
-						)}
-					/>
-					<FaRegStar
-						onClick={handleOnChangeRouteStar}
-						className={clsx(
-							'cursor-pointer transition-all duration-300',
-							updatedRoute.star ? 'text-amber-500' : 'opacity-40'
-						)}
-					/>
-					<PiBezierCurveBold
-						onClick={handleOnChangeRouteCrossing}
-						className={clsx(
-							'cursor-pointer transition-all duration-300',
-							updatedRoute.crossing ? 'text-amber-500' : 'opacity-40'
-						)}
-					/>
-				</>
-			) : (
-				<>
-					<span>{route.name}</span>
-					<span className='font-semibold'>{route.grade}</span>
-					{route.sit && <TbArmchair title='Sit' />}
-					{route.star && <FaRegStar title='Star' />}
-					{route.crossing && (
-						<PiBezierCurveBold title='Crossing (trave)' className='rotate-180' />
-					)}
+					<div
+						ref={elementRef}
+						onClick={handleOnChangeRouteCoordinates}
+						style={{ position: 'relative' }}
+					>
+						<Image
+							src={`/boulders/tiburon.webp`}
+							alt='Page not found'
+							sizes='100%'
+							width={0}
+							height={0}
+							className='h-auto w-full shadow-lg drop-shadow-lg md:rounded-md'
+							priority
+						/>
+
+						<SvgLineDrawer
+							coordinates={updatedRoute.coordinates ?? []}
+							colors={getRouteGradeColorForSVGDrawing(updatedRoute.grade)}
+						/>
+
+						<div className='absolute bottom-2 left-2 z-10 flex flex-col gap-2'>
+							<Button
+								buttonStyle='danger'
+								title='Clear route'
+								className='size-9 text-yellow-950 shadow-md hover:text-white'
+								onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+									event.stopPropagation()
+									setUpdatedRoute((route) => ({ ...route, coordinates: [] }))
+								}}
+							>
+								<LuEraser />
+							</Button>
+						</div>
+					</div>
+					<div className='flex flex-wrap items-center justify-start gap-2 rounded-sm bg-amber-100 p-2 text-base'>
+						<HiOutlineInformationCircle className='mr-2 size-6' />
+						<span>
+							Click anywhere on the picture to begin the route. Once you complete it
+							click the
+						</span>
+						<FaRegSave className='size-5' />
+						<span>button</span>
+					</div>
 				</>
 			)}
-			{userCanEdit && (
-				<Button
-					buttonStyle={isInEditMode ? 'success' : 'primary'}
-					title='Edit route'
-					className='size-9 text-yellow-950 shadow-md'
-					onClick={handleOnClickEditButton}
-					disabled={actionRunning}
-				>
-					{buttonEditContent}
-				</Button>
-			)}
-		</div>
+			<div className='flex items-center gap-2 text-2xl'>
+				<TbRoute2 className='-scale-x-[1]' />
+				{editMode ? (
+					<>
+						<input
+							type='text'
+							className='border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0'
+							value={updatedRoute.name}
+							onChange={handleOnChangeRouteName}
+							placeholder='Route name'
+						/>
+						<input
+							type='text'
+							className='max-w-24 border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0'
+							value={updatedRoute.grade}
+							onChange={handleOnChangeRouteGrade}
+							placeholder='Route grade'
+						/>
+						<TbArmchair
+							onClick={handleOnChangeRouteSit}
+							className={clsx(
+								'cursor-pointer transition-all duration-300',
+								updatedRoute.sit ? 'text-amber-500' : 'opacity-40'
+							)}
+						/>
+						<FaRegStar
+							onClick={handleOnChangeRouteStar}
+							className={clsx(
+								'cursor-pointer transition-all duration-300',
+								updatedRoute.star ? 'text-amber-500' : 'opacity-40'
+							)}
+						/>
+						<PiBezierCurveBold
+							onClick={handleOnChangeRouteCrossing}
+							className={clsx(
+								'cursor-pointer transition-all duration-300',
+								updatedRoute.crossing ? 'text-amber-500' : 'opacity-40'
+							)}
+						/>
+					</>
+				) : (
+					<>
+						<span>{route.name}</span>
+						<span className='font-semibold'>{route.grade}</span>
+						{route.sit && <TbArmchair title='Sit' />}
+						{route.star && <FaRegStar title='Star' />}
+						{route.crossing && (
+							<PiBezierCurveBold title='Crossing (trave)' className='rotate-180' />
+						)}
+					</>
+				)}
+				{userCanEdit && (
+					<Button
+						buttonStyle={editMode ? 'success' : 'primary'}
+						title='Edit route'
+						className='size-9 text-yellow-950 shadow-md'
+						onClick={handleOnClickEditButton}
+						disabled={actionRunning}
+					>
+						{buttonEditContent}
+					</Button>
+				)}
+			</div>
+		</>
 	)
 }

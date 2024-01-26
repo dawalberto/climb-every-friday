@@ -1,7 +1,6 @@
 import { NotFound } from '@/components/UI'
-import { Boulder } from '@/components/domain'
+import { Boulder, Routes } from '@/components/domain'
 import { getBoulderByIdentifierName, getRoutesByBoulderId } from '@/services'
-import { RoutesProvider } from '@/stores'
 
 export default async function BoulderPage({ params }: { params: { boulder: string } }) {
 	const boulderToFind = params.boulder
@@ -16,10 +15,8 @@ export default async function BoulderPage({ params }: { params: { boulder: strin
 
 	return (
 		<div className='flex flex-col gap-2'>
-			<RoutesProvider>
-				<Boulder name={name} sideAImageHref={side_a_image_href} routes={routes} />
-			</RoutesProvider>
-			{/* ROUTES */}
+			<Boulder name={name} sideAImageHref={side_a_image_href} routes={routes} />
+			<Routes routes={routes} />
 		</div>
 	)
 }
