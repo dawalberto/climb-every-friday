@@ -20,14 +20,15 @@ type BoulderOptions = {
 export type RouteCoordinates = { routeId: string; coordinates: Position[] }
 
 export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
+	const initialRouteCoordinates = useMemo<RouteCoordinates[]>(
+		() => routes.map((route) => ({ routeId: route.id, coordinates: route.coordinates ?? [] })),
+		[routes]
+	)
 	const { elementRef, handleClick } = useElementClickPositions<HTMLDivElement>()
-	const [routesCoordinates, setRoutesCoordinates] = useState<RouteCoordinates[]>([])
+	const [routesCoordinates, setRoutesCoordinates] =
+		useState<RouteCoordinates[]>(initialRouteCoordinates)
 	const { RouteComponent: Route, editingRoute, getRouteGradeColor } = useRoute()
-	// const setRouteCoordinatesInStore = useRoutesStore((state) => state.setRouteCoordinates)
 	const { setRouteCoordinates } = useRoutesStore()
-
-	// TODO - try with zustand instead of context
-	// TODO - save and get routes coordinates from DB
 
 	const handleClickWithPositions = useCallback(
 		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -54,6 +55,7 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 		[editingRoute, handleClick]
 	)
 
+	// Edit current route coordinates in the store
 	useEffect(() => {
 		const editingRouteCoordinates =
 			routesCoordinates.find((route) => route.routeId === editingRoute.id)?.coordinates ?? []
@@ -158,7 +160,6 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 								event.stopPropagation()
 								eraseRouteCoordinates(editingRoute.id)
 							}}
-							// disabled={actionRunning}
 						>
 							<LuEraser />
 						</Button>

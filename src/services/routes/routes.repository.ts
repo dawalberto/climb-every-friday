@@ -22,6 +22,7 @@ export const updateRoute = async ({
 	route: Route
 }) => {
 	try {
+		const stringifiedCoordinates = JSON.stringify(route.coordinates)
 		const { rows } = await sql<Route>`
 			UPDATE routes
 			SET
@@ -29,7 +30,8 @@ export const updateRoute = async ({
 				grade = ${route.grade},
 				star = ${route.star},
 				crossing = ${route.crossing},
-				sit = ${route.sit}
+				sit = ${route.sit},
+				coordinates = ${stringifiedCoordinates}
 			WHERE id = ${route.id}
 			RETURNING *;`
 

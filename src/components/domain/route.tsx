@@ -42,17 +42,15 @@ export const Route = ({
 			setEditingRoute({ id: route.id, inEditMode: true })
 		}
 
+		const updatedRouteCopy = { ...updatedRoute }
 		if (routeCoordinates?.routeId === route.id) {
-			console.log('🦊 routeCoordinates', routeCoordinates)
-			console.log('🦊 updatedRoute', updatedRoute)
+			updatedRouteCopy.coordinates = routeCoordinates.coordinates
 		}
 
-		return
-
-		const routeUpdated = _isEqual(route, updatedRoute)
+		const routeUpdated = _isEqual(route, updatedRouteCopy)
 
 		if (isInEditMode && !routeUpdated) {
-			updateRoute(updatedRoute)
+			updateRoute(updatedRouteCopy)
 		}
 	}, [isInEditMode, route, setEditingRoute, updateRoute, updatedRoute, routeCoordinates])
 

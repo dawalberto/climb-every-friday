@@ -1,3 +1,5 @@
+import { Position } from '@/hooks/UI'
+
 export type Route = {
 	id: string
 	name: string
@@ -9,6 +11,7 @@ export type Route = {
 	side: RouteSide
 	boulder_id: string
 	created_at: Date
+	coordinates?: Position[]
 }
 
 export enum RouteSide {
