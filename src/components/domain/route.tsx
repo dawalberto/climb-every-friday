@@ -1,17 +1,24 @@
 'use client'
 
 import { useElementClickPositions } from '@/hooks/UI'
+import { PositionAndSize } from '@/hooks/UI/use-get-element-position-and-size'
 import { Route as RouteType } from '@/lib/models/routes'
+import {
+	CustomEvents,
+	dispatchCustomEvent,
+	subscribe,
+	unsubscribe,
+} from '@/lib/utils/custom-events'
 import { getRouteGradeColorForSVGDrawing } from '@/lib/utils/routes'
 import { useRoutesActions } from '@/services'
 import clsx from 'clsx'
 import _isEqual from 'lodash/isEqual'
 import Image from 'next/image'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FaRegSave } from 'react-icons/fa'
 import { FaRegStar } from 'react-icons/fa6'
 import { GiMountaintop } from 'react-icons/gi'
-import { HiOutlineInformationCircle, HiPencilSquare } from 'react-icons/hi2'
+import { HiOutlineInformationCircle, HiPencilSquare, HiXMark } from 'react-icons/hi2'
 import { LuEraser } from 'react-icons/lu'
 import { PiBezierCurveBold } from 'react-icons/pi'
 import { TbArmchair, TbRoute2 } from 'react-icons/tb'
@@ -22,8 +29,43 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 	const { actionRunning, updateRoute } = useRoutesActions()
 	const { elementRef, handleClick } = useElementClickPositions<HTMLDivElement>()
 	const [updatedRoute, setUpdatedRoute] = useState<RouteType>(route)
+	const [positionAndOfBoulderImage, setPositionAndWidthOfBoulderImage] = useState<
+		Pick<PositionAndSize, 'top' | 'left' | 'width'>
+	>({ top: 0, left: 0, width: 0 })
+	const [showHelpMessageInBoulderImage, setShowHelpMessageInBoulderImage] = useState(true)
+
+	const handleOnPositionAndSizeOfBoulderImageCalculated = useCallback((event: Event) => {
+		const positionAndSize = (event as CustomEvent<PositionAndSize>).detail
+
+		setPositionAndWidthOfBoulderImage({
+			top: positionAndSize.top,
+			left: positionAndSize.left,
+			width: positionAndSize.width,
+		})
+	}, [])
+
+	useEffect(() => {
+		subscribe(
+			CustomEvents.ON_POSITION_AND_SIZE_OF_BOULDER_IMAGE_CALCULATED,
+			handleOnPositionAndSizeOfBoulderImageCalculated
+		)
+		return () => {
+			unsubscribe(
+				CustomEvents.ON_POSITION_AND_SIZE_OF_BOULDER_IMAGE_CALCULATED,
+				handleOnPositionAndSizeOfBoulderImageCalculated
+			)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	const handleOnClickEditButton = useCallback(() => {
+		if (editMode) {
+			dispatchCustomEvent(CustomEvents.ON_ROUTE_MODE_EDIT_OFF)
+		} else {
+			dispatchCustomEvent(CustomEvents.ON_ROUTE_MODE_EDIT_ON)
+			setShowHelpMessageInBoulderImage(true)
+		}
+
 		setEditMode((mode) => !mode)
 
 		const routeIsNotUpdated = _isEqual(route, updatedRoute)
@@ -32,23 +74,6 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 			updateRoute(updatedRoute)
 		}
 	}, [editMode, route, updateRoute, updatedRoute])
-
-	const handleOnChangeRouteCoordinates = useCallback(
-		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
-			if (!editMode) {
-				return
-			}
-			const positionClicked = handleClick(event)
-			if (!positionClicked) {
-				return
-			}
-			setUpdatedRoute((route) => ({
-				...route,
-				coordinates: [...(route.coordinates ?? []), positionClicked],
-			}))
-		},
-		[editMode, handleClick]
-	)
 
 	const handleOnChangeRouteName = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setUpdatedRoute((route) => ({ ...route, name: event.target.value }))
@@ -70,6 +95,23 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 		setUpdatedRoute((route) => ({ ...route, crossing: !route.crossing }))
 	}
 
+	const handleOnChangeRouteCoordinates = useCallback(
+		(event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+			if (!editMode) {
+				return
+			}
+			const positionClicked = handleClick(event)
+			if (!positionClicked) {
+				return
+			}
+			setUpdatedRoute((route) => ({
+				...route,
+				coordinates: [...(route.coordinates ?? []), positionClicked],
+			}))
+		},
+		[editMode, handleClick]
+	)
+
 	const buttonEditContent = useMemo(() => {
 		let icon = <HiPencilSquare className='size-6' />
 
@@ -89,7 +131,14 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 	return (
 		<>
 			{editMode && (
-				<>
+				<div
+					className='fixed'
+					style={{
+						left: positionAndOfBoulderImage.left,
+						top: positionAndOfBoulderImage.top - 11,
+						width: positionAndOfBoulderImage.width,
+					}}
+				>
 					<div
 						ref={elementRef}
 						onClick={handleOnChangeRouteCoordinates}
@@ -123,17 +172,30 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 								<LuEraser />
 							</Button>
 						</div>
+						{showHelpMessageInBoulderImage && (
+							<div className='absolute right-2 top-2 flex flex-col gap-2 rounded-md bg-amber-100 p-2 text-base shadow-md'>
+								<div className='flex items-center justify-between'>
+									<HiOutlineInformationCircle className='mr-2 size-6' />
+									<HiXMark
+										className='size-6 cursor-pointer'
+										onClick={(e: Event) => {
+											e.stopPropagation()
+											setShowHelpMessageInBoulderImage(false)
+										}}
+									/>
+								</div>
+								<div className='flex flex-wrap items-center justify-start gap-2'>
+									<span>
+										Click anywhere on the picture to begin or continue the
+										route. Once you complete it click the
+									</span>
+									<FaRegSave className='size-5' />
+									<span>button</span>
+								</div>
+							</div>
+						)}
 					</div>
-					<div className='flex flex-wrap items-center justify-start gap-2 rounded-sm bg-amber-100 p-2 text-base'>
-						<HiOutlineInformationCircle className='mr-2 size-6' />
-						<span>
-							Click anywhere on the picture to begin the route. Once you complete it
-							click the
-						</span>
-						<FaRegSave className='size-5' />
-						<span>button</span>
-					</div>
-				</>
+				</div>
 			)}
 			<div className='flex items-center gap-2 text-2xl'>
 				<TbRoute2 className='-scale-x-[1]' />

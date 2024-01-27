@@ -1,8 +1,17 @@
 'use client'
 
+import { useGetElementPositionAndSize } from '@/hooks/UI/use-get-element-position-and-size'
 import { Route as RouteType } from '@/lib/models/routes'
+import {
+	CustomEvents,
+	dispatchCustomEvent,
+	subscribe,
+	unsubscribe,
+} from '@/lib/utils/custom-events'
 import { getRouteGradeColorForSVGDrawing } from '@/lib/utils/routes'
+import clsx from 'clsx'
 import Image from 'next/image'
+import { useCallback, useEffect, useState } from 'react'
 import { GiStonePile } from 'react-icons/gi'
 import { SvgLineDrawer } from '../UI'
 
@@ -13,13 +22,46 @@ type BoulderOptions = {
 }
 
 export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
+	const [showBoulderImage, setShowBoulderImage] = useState(true)
+	const { elementToGetPositionAndSizeRef, positionAndSize } = useGetElementPositionAndSize()
+
+	const handleOnRouteOnEditModeOn = useCallback(() => {
+		setShowBoulderImage(false)
+	}, [])
+
+	const handleOnRouteOnEditModeOff = useCallback(() => {
+		setShowBoulderImage(true)
+	}, [])
+
+	useEffect(() => {
+		subscribe(CustomEvents.ON_ROUTE_MODE_EDIT_ON, handleOnRouteOnEditModeOn)
+		subscribe(CustomEvents.ON_ROUTE_MODE_EDIT_OFF, handleOnRouteOnEditModeOff)
+		return () => {
+			unsubscribe(CustomEvents.ON_ROUTE_MODE_EDIT_ON, handleOnRouteOnEditModeOn)
+			unsubscribe(CustomEvents.ON_ROUTE_MODE_EDIT_OFF, handleOnRouteOnEditModeOff)
+		}
+	}, [handleOnRouteOnEditModeOff, handleOnRouteOnEditModeOn])
+
+	useEffect(() => {
+		if (positionAndSize) {
+			dispatchCustomEvent(
+				CustomEvents.ON_POSITION_AND_SIZE_OF_BOULDER_IMAGE_CALCULATED,
+				positionAndSize
+			)
+		}
+	}, [positionAndSize])
+
 	return (
 		<>
 			<h1 className='flex-center flex space-x-2 text-3xl font-semibold tracking-wide text-amber-800'>
 				<GiStonePile />
 				<span>{name}</span>
 			</h1>
-			<div style={{ position: 'relative' }}>
+			<div
+				ref={elementToGetPositionAndSizeRef}
+				style={{ position: 'relative' }}
+				className={clsx(!showBoulderImage && 'invisible')}
+			>
 				<Image
 					src={`/boulders/${sideAImageHref}`}
 					alt='Page not found'
