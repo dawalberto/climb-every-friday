@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			<AuthProvider>
 				<SWRProvider>
 					<body className='relative bg-amber-50 text-lg text-amber-950'>
-						<div className='sticky left-0 top-0 z-50'>
+						<div className='fixed left-0 top-0 z-50'>
 							<Nav />
 						</div>
 						<div className='relative mx-auto max-w-7xl px-1 pt-20 sm:pt-6 md:px-4'>

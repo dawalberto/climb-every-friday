@@ -24,7 +24,7 @@ type BoulderOptions = {
 export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 	const [showBoulderImage, setShowBoulderImage] = useState(true)
 	const { elementToGetPositionAndSizeRef, positionAndSize } = useGetElementPositionAndSize({
-		updateOnScroll: false,
+		updateOnScroll: true,
 	})
 
 	const handleOnRouteOnEditModeOn = useCallback(() => {
@@ -55,9 +55,6 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 
 	return (
 		<>
-			{/* Just for hide the routes on scroll */}
-			<div className='fixed left-0 top-0 h-40 w-full bg-amber-50 ' />
-
 			<h1 className='flex-center z-20 mb-2 flex space-x-2 bg-amber-50 text-3xl font-semibold tracking-wide text-amber-800'>
 				<GiStonePile className='z-10' />
 				<span className='z-10'>{name}</span>
