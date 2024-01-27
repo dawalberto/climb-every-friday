@@ -132,7 +132,7 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 		<>
 			{editMode && (
 				<div
-					className='fixed'
+					className='fixed z-20'
 					style={{
 						left: positionAndOfBoulderImage.left,
 						top: positionAndOfBoulderImage.top - 11,

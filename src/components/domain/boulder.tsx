@@ -53,9 +53,12 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 
 	return (
 		<>
-			<h1 className='flex-center flex space-x-2 text-3xl font-semibold tracking-wide text-amber-800'>
-				<GiStonePile />
-				<span>{name}</span>
+			{/* Just for hide the routes on scroll */}
+			<div className='fixed left-0 top-0 h-40 w-full bg-amber-50 ' />
+
+			<h1 className='flex-center z-20 mb-2 flex space-x-2 bg-amber-50 text-3xl font-semibold tracking-wide text-amber-800'>
+				<GiStonePile className='z-10' />
+				<span className='z-10'>{name}</span>
 			</h1>
 			<div
 				ref={elementToGetPositionAndSizeRef}

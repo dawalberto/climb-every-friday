@@ -16,9 +16,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang='en' className={khandFont.className}>
 			<AuthProvider>
 				<SWRProvider>
-					<body className='bg-amber-50 text-lg text-amber-950'>
-						<Nav />
-						<div className='mx-auto max-w-7xl px-1 pt-20 sm:pt-6 md:px-4'>
+					<body className='relative bg-amber-50 text-lg text-amber-950'>
+						<div className='sticky left-0 top-0 z-50'>
+							<Nav />
+						</div>
+						<div className='relative mx-auto max-w-7xl px-1 pt-20 sm:pt-6 md:px-4'>
 							{children}
 						</div>
 					</body>

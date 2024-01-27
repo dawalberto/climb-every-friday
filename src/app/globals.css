@@ -19,3 +19,28 @@
 		@apply bg-gradient-to-r from-amber-300 to-amber-500;
 	}
 }
+
+/* SCROLLBAR */
+/* This will affect the scrollbar in Chrome, Safari and Edge. */
+::-webkit-scrollbar {
+	width: 10px; /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+	background: #fef3c7; /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+	background: #fbbf24; /* color of the scroll thumb */
+	border-radius: 8px; /* roundness of the scroll thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #f59e0b; /* color of the scroll thumb when hovering */
+}
+
+/* This will affect the scrollbar in Firefox. */
+* {
+	scrollbar-width: thin; /* width of the entire scrollbar */
+	scrollbar-color: #fbbf24 #fef3c7; /* color of the scroll thumb and tracking area */
+}
