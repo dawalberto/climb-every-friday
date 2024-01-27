@@ -3,18 +3,13 @@
 import { useElementClickPositions } from '@/hooks/UI'
 import { PositionAndSize } from '@/hooks/UI/use-get-element-position-and-size'
 import { Route as RouteType } from '@/lib/models/routes'
-import {
-	CustomEvents,
-	dispatchCustomEvent,
-	subscribe,
-	unsubscribe,
-} from '@/lib/utils/custom-events'
+import { CustomEvents, dispatchCustomEvent } from '@/lib/utils/custom-events'
 import { getRouteGradeColorForSVGDrawing } from '@/lib/utils/routes'
 import { useRoutesActions } from '@/services'
 import clsx from 'clsx'
 import _isEqual from 'lodash/isEqual'
 import Image from 'next/image'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { FaRegSave } from 'react-icons/fa'
 import { FaRegStar } from 'react-icons/fa6'
 import { GiMountaintop } from 'react-icons/gi'
@@ -24,39 +19,21 @@ import { PiBezierCurveBold } from 'react-icons/pi'
 import { TbArmchair, TbRoute2 } from 'react-icons/tb'
 import { Button, SvgLineDrawer } from '../UI'
 
-export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: boolean }) => {
+export const Route = ({
+	route,
+	userCanEdit,
+	positionAndWidthOfBoulderImage,
+}: {
+	route: RouteType
+	userCanEdit: boolean
+	positionAndWidthOfBoulderImage: Pick<PositionAndSize, 'top' | 'left' | 'width'>
+}) => {
 	const [editMode, setEditMode] = useState(false)
 	const { actionRunning, updateRoute } = useRoutesActions()
 	const { elementRef, handleClick } = useElementClickPositions<HTMLDivElement>()
 	const [updatedRoute, setUpdatedRoute] = useState<RouteType>(route)
-	const [positionAndOfBoulderImage, setPositionAndWidthOfBoulderImage] = useState<
-		Pick<PositionAndSize, 'top' | 'left' | 'width'>
-	>({ top: 0, left: 0, width: 0 })
+
 	const [showHelpMessageInBoulderImage, setShowHelpMessageInBoulderImage] = useState(true)
-
-	const handleOnPositionAndSizeOfBoulderImageCalculated = useCallback((event: Event) => {
-		const positionAndSize = (event as CustomEvent<PositionAndSize>).detail
-
-		setPositionAndWidthOfBoulderImage({
-			top: positionAndSize.top,
-			left: positionAndSize.left,
-			width: positionAndSize.width,
-		})
-	}, [])
-
-	useEffect(() => {
-		subscribe(
-			CustomEvents.ON_POSITION_AND_SIZE_OF_BOULDER_IMAGE_CALCULATED,
-			handleOnPositionAndSizeOfBoulderImageCalculated
-		)
-		return () => {
-			unsubscribe(
-				CustomEvents.ON_POSITION_AND_SIZE_OF_BOULDER_IMAGE_CALCULATED,
-				handleOnPositionAndSizeOfBoulderImageCalculated
-			)
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
 
 	const handleOnClickEditButton = useCallback(() => {
 		if (editMode) {
@@ -134,9 +111,9 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 				<div
 					className='fixed z-20'
 					style={{
-						left: positionAndOfBoulderImage.left,
-						top: positionAndOfBoulderImage.top - 11,
-						width: positionAndOfBoulderImage.width,
+						left: positionAndWidthOfBoulderImage.left,
+						top: positionAndWidthOfBoulderImage.top - 11,
+						width: positionAndWidthOfBoulderImage.width,
 					}}
 				>
 					<div
@@ -173,7 +150,7 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 							</Button>
 						</div>
 						{showHelpMessageInBoulderImage && (
-							<div className='absolute right-2 top-2 flex flex-col gap-2 rounded-md bg-amber-100 p-2 text-base shadow-md'>
+							<div className='absolute right-2 top-2 ml-2 flex flex-col gap-2 rounded-md bg-amber-100 p-2 text-base shadow-md'>
 								<div className='flex items-center justify-between'>
 									<HiOutlineInformationCircle className='mr-2 size-6' />
 									<HiXMark
@@ -184,13 +161,13 @@ export const Route = ({ route, userCanEdit }: { route: RouteType; userCanEdit: b
 										}}
 									/>
 								</div>
-								<div className='flex flex-wrap items-center justify-start gap-2'>
-									<span>
+								<div className='inline'>
+									<span className='inline pr-1'>
 										Click anywhere on the picture to begin or continue the
 										route. Once you complete it click the
 									</span>
-									<FaRegSave className='size-5' />
-									<span>button</span>
+									<FaRegSave className='inline size-5' />
+									<span className='pl-1'>button</span>
 								</div>
 							</div>
 						)}

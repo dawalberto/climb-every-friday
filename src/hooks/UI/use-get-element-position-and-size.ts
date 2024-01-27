@@ -2,7 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-export const useGetElementPositionAndSize = () => {
+export const useGetElementPositionAndSize = ({
+	updateOnScroll = true,
+	updateOnResize = true,
+}: {
+	updateOnScroll?: boolean
+	updateOnResize?: boolean
+}) => {
 	const elementRef = useRef<HTMLDivElement>(null)
 	const [positionAndSize, setPositionAndSize] = useState({
 		top: 0,
@@ -29,12 +35,20 @@ export const useGetElementPositionAndSize = () => {
 
 	useEffect(() => {
 		updatePositionAndSize()
-		window.addEventListener('resize', updatePositionAndSize)
-		window.addEventListener('scroll', updatePositionAndSize)
+		if (updateOnResize) {
+			window.addEventListener('resize', updatePositionAndSize)
+		}
+		if (updateOnScroll) {
+			window.addEventListener('scroll', updatePositionAndSize)
+		}
 
 		return () => {
-			window.removeEventListener('resize', updatePositionAndSize)
-			window.removeEventListener('scroll', updatePositionAndSize)
+			if (updateOnResize) {
+				window.removeEventListener('resize', updatePositionAndSize)
+			}
+			if (updateOnScroll) {
+				window.removeEventListener('scroll', updatePositionAndSize)
+			}
 		}
 	}, [])
 

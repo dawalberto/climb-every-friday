@@ -23,7 +23,9 @@ type BoulderOptions = {
 
 export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 	const [showBoulderImage, setShowBoulderImage] = useState(true)
-	const { elementToGetPositionAndSizeRef, positionAndSize } = useGetElementPositionAndSize()
+	const { elementToGetPositionAndSizeRef, positionAndSize } = useGetElementPositionAndSize({
+		updateOnScroll: false,
+	})
 
 	const handleOnRouteOnEditModeOn = useCallback(() => {
 		setShowBoulderImage(false)
