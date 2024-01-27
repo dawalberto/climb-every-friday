@@ -31,7 +31,7 @@ export const MobileNav = () => {
 			<nav
 				className={clsx(
 					!showMenu && 'shadow-md',
-					'fixed left-0 z-50 flex h-16 w-full items-center justify-between bg-gradient-to-r from-amber-300 to-amber-500 px-4 sm:hidden'
+					'fixed left-0 z-50 flex h-16 w-full items-center justify-between bg-gradient-to-r from-amber-300 to-amber-500 px-4 md:hidden'
 				)}
 			>
 				<motion.button

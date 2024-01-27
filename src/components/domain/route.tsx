@@ -176,62 +176,64 @@ export const Route = ({
 				</div>
 			)}
 			<div className='flex items-center justify-between gap-2 text-2xl'>
-				{editMode ? (
-					<>
-						<TbRoute2 className='-scale-x-[1]' />
-						<input
-							type='text'
-							className='max-w-40 border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0 md:max-w-48'
-							value={updatedRoute.name}
-							onChange={handleOnChangeRouteName}
-							placeholder='Route name'
-						/>
-						<input
-							type='text'
-							className='max-w-14 border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0 md:max-w-16'
-							value={updatedRoute.grade}
-							onChange={handleOnChangeRouteGrade}
-							placeholder='Route grade'
-						/>
-						<TbArmchair
-							onClick={handleOnChangeRouteSit}
-							className={clsx(
-								'cursor-pointer transition-all duration-300',
-								updatedRoute.sit ? 'text-amber-500' : 'opacity-40'
-							)}
-						/>
-						<FaRegStar
-							onClick={handleOnChangeRouteStar}
-							className={clsx(
-								'cursor-pointer transition-all duration-300',
-								updatedRoute.star ? 'text-amber-500' : 'opacity-40'
-							)}
-						/>
-						<PiBezierCurveBold
-							onClick={handleOnChangeRouteCrossing}
-							className={clsx(
-								'cursor-pointer transition-all duration-300',
-								updatedRoute.crossing ? 'text-amber-500' : 'opacity-40'
-							)}
-						/>
-					</>
-				) : (
-					<>
-						<div className='flex items-center gap-2'>
+				<div className='flex items-center gap-2'>
+					{editMode ? (
+						<>
 							<TbRoute2 className='-scale-x-[1]' />
-							<span>{route.name}</span>
-							<span className='font-semibold'>{route.grade}</span>
-							{route.sit && <TbArmchair title='Sit' />}
-							{route.star && <FaRegStar title='Star' />}
-							{route.crossing && (
-								<PiBezierCurveBold
-									title='Crossing (trave)'
-									className='rotate-180'
-								/>
-							)}
-						</div>
-					</>
-				)}
+							<input
+								type='text'
+								className='max-w-40 border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0 md:max-w-48'
+								value={updatedRoute.name}
+								onChange={handleOnChangeRouteName}
+								placeholder='Route name'
+							/>
+							<input
+								type='text'
+								className='max-w-14 border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0 md:max-w-16'
+								value={updatedRoute.grade}
+								onChange={handleOnChangeRouteGrade}
+								placeholder='Route grade'
+							/>
+							<TbArmchair
+								onClick={handleOnChangeRouteSit}
+								className={clsx(
+									'cursor-pointer transition-all duration-300',
+									updatedRoute.sit ? 'text-amber-500' : 'opacity-40'
+								)}
+							/>
+							<FaRegStar
+								onClick={handleOnChangeRouteStar}
+								className={clsx(
+									'cursor-pointer transition-all duration-300',
+									updatedRoute.star ? 'text-amber-500' : 'opacity-40'
+								)}
+							/>
+							<PiBezierCurveBold
+								onClick={handleOnChangeRouteCrossing}
+								className={clsx(
+									'cursor-pointer transition-all duration-300',
+									updatedRoute.crossing ? 'text-amber-500' : 'opacity-40'
+								)}
+							/>
+						</>
+					) : (
+						<>
+							<div className='flex items-center gap-2'>
+								<TbRoute2 className='-scale-x-[1]' />
+								<span>{route.name}</span>
+								<span className='font-semibold'>{route.grade}</span>
+								{route.sit && <TbArmchair title='Sit' />}
+								{route.star && <FaRegStar title='Star' />}
+								{route.crossing && (
+									<PiBezierCurveBold
+										title='Crossing (trave)'
+										className='rotate-180'
+									/>
+								)}
+							</div>
+						</>
+					)}
+				</div>
 				{userCanEdit && (
 					<Button
 						buttonStyle={editMode ? 'success' : 'primary'}

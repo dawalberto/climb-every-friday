@@ -2,7 +2,7 @@ import { GiMountaintop } from 'react-icons/gi'
 
 export const Spinner = () => {
 	return (
-		<div className='absolute-center w-full text-amber-600 sm:h-72 sm:w-72'>
+		<div className='absolute-center w-full text-amber-600 md:h-72 md:w-72'>
 			<GiMountaintop className='h-auto w-full animate-bounce duration-300' />
 			{/* <svg
 				className='animate-spin '

@@ -64,7 +64,7 @@ export const Task = ({ task }: { task: GetTask }) => {
 						className='flex h-6 w-6 flex-none cursor-pointer self-center rounded-md border-none checked:bg-amber-500 hover:checked:bg-amber-600 focus:border-amber-400 focus:ring-0 focus:checked:bg-amber-700'
 					/>
 					<div className='flex flex-1 flex-col gap-2'>
-						<div className='flex w-full flex-col-reverse gap-2 sm:flex-row sm:justify-between'>
+						<div className='flex w-full flex-col-reverse gap-2 md:flex-row md:justify-between'>
 							<input
 								type='text'
 								className={clsx(
@@ -78,7 +78,7 @@ export const Task = ({ task }: { task: GetTask }) => {
 									updateTaskNameDebounced(value)
 								}}
 							/>
-							<div className='flex-center flex w-fit gap-2 self-end sm:self-start'>
+							<div className='flex-center flex w-fit gap-2 self-end md:self-start'>
 								<button
 									disabled={
 										actionRunning || taskState || priority === maxPriority
@@ -122,8 +122,8 @@ export const Task = ({ task }: { task: GetTask }) => {
 								className='border-none bg-transparent focus:ring-0 disabled:cursor-not-allowed'
 							/>
 						)}
-						<div className='flex flex-col justify-end gap-0.5 text-right text-base opacity-70 sm:flex-row'>
-							<span className='sm:mr-2 sm:border-r-2 sm:border-amber-300 sm:pr-2'>
+						<div className='flex flex-col justify-end gap-0.5 text-right text-base opacity-70 md:flex-row'>
+							<span className='md:mr-2 md:border-r-2 md:border-amber-300 md:pr-2'>
 								{created_by_name}
 							</span>
 							<span>{new Date(created_at ?? '').toLocaleString()}</span>

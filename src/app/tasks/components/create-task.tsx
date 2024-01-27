@@ -42,16 +42,16 @@ export const CreateTask = () => {
 
 	return (
 		<form
-			className='flex flex-col shadow-lg drop-shadow-lg sm:flex-row'
+			className='flex flex-col shadow-lg drop-shadow-lg md:flex-row'
 			onSubmit={handleOnSubmit}
 		>
 			<input
 				type='text'
 				placeholder='Task'
 				className={clsx(
-					'text-xl focus:border-amber-500 focus:ring-0 sm:w-[90%]',
+					'text-xl focus:border-amber-500 focus:ring-0 md:w-[90%]',
 					'rounded-t-md',
-					'border-r-0 sm:rounded-l-md sm:rounded-r-none',
+					'border-r-0 md:rounded-l-md md:rounded-r-none',
 					createTaskState.error && 'border-2 border-red-500',
 					!createTaskState.error && 'border-none'
 				)}
@@ -64,7 +64,7 @@ export const CreateTask = () => {
 				className={clsx(
 					'flex-1 px-4 py-2',
 					'rounded-b-md rounded-t-none',
-					'sm:rounded-l-none sm:rounded-r-md',
+					'md:rounded-l-none md:rounded-r-md',
 					createTaskState.error && 'border-2 border-red-500',
 					!createTaskState.error && 'border-none'
 				)}

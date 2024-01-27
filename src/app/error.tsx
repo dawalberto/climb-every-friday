@@ -11,7 +11,7 @@ export default function Error({
 	reset: () => void
 }) {
 	return (
-		<div className='absolute-center h-auto w-full sm:w-1/2'>
+		<div className='absolute-center h-auto w-full md:w-1/2'>
 			<div className='flex-center flex flex-col gap-6'>
 				<Image
 					src='/internal-server-error-500.svg'
