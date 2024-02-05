@@ -2,9 +2,9 @@
 
 import { useElementClickPositions } from '@/hooks/UI'
 import { PositionAndSize } from '@/hooks/UI/use-get-element-position-and-size'
-import { Route as RouteType } from '@/lib/models/routes'
+import { Grades, Route as RouteType } from '@/lib/models/routes'
 import { CustomEvents, dispatchCustomEvent } from '@/lib/utils/custom-events'
-import { getRouteGradeColorForSVGDrawing } from '@/lib/utils/routes'
+import { getRouteGradeColor, getRouteGradeColorForSVGDrawing } from '@/lib/utils/routes'
 import { useRoutesActions } from '@/services'
 import clsx from 'clsx'
 import _isEqual from 'lodash/isEqual'
@@ -17,7 +17,10 @@ import { HiOutlineInformationCircle, HiPencilSquare, HiXMark } from 'react-icons
 import { LuEraser } from 'react-icons/lu'
 import { PiBezierCurveBold } from 'react-icons/pi'
 import { TbArmchair, TbRoute2 } from 'react-icons/tb'
-import { Button, SvgLineDrawer } from '../UI'
+import { Button, Option, Select, SvgLineDrawer, transformEnumToSelectOptions } from '../UI'
+
+// TODO - create useForm hook to refactor this and avoid the handlers logic here
+// TODO - create RouteEdit and RouteDetails component instead of doing it in the template itself
 
 export const Route = ({
 	route,
@@ -34,6 +37,8 @@ export const Route = ({
 	const [updatedRoute, setUpdatedRoute] = useState<RouteType>(route)
 
 	const [showHelpMessageInBoulderImage, setShowHelpMessageInBoulderImage] = useState(true)
+
+	const gradesOptions = useMemo(() => transformEnumToSelectOptions(Grades), [])
 
 	const handleOnClickEditButton = useCallback(() => {
 		if (editMode) {
@@ -56,8 +61,8 @@ export const Route = ({
 		setUpdatedRoute((route) => ({ ...route, name: event.target.value }))
 	}
 
-	const handleOnChangeRouteGrade = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setUpdatedRoute((route) => ({ ...route, grade: event.target.value }))
+	const handleOnChangeRouteGrade = (routeSelected: Option) => {
+		setUpdatedRoute((route) => ({ ...route, grade: routeSelected.id as unknown as Grades }))
 	}
 
 	const handleOnChangeRouteSit = () => {
@@ -104,6 +109,16 @@ export const Route = ({
 
 		return icon
 	}, [actionRunning, editMode])
+
+	const colorIconRoute = useMemo(() => {
+		const color = getRouteGradeColor(updatedRoute.grade)
+
+		if (color?.length) {
+			return color[1]
+		}
+		return 'black'
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [updateRoute])
 
 	return (
 		<>
@@ -156,7 +171,7 @@ export const Route = ({
 									<HiOutlineInformationCircle className='mr-2 size-6' />
 									<HiXMark
 										className='size-6 cursor-pointer'
-										onClick={(e: Event) => {
+										onClick={(e: React.MouseEvent) => {
 											e.stopPropagation()
 											setShowHelpMessageInBoulderImage(false)
 										}}
@@ -187,13 +202,18 @@ export const Route = ({
 								onChange={handleOnChangeRouteName}
 								placeholder='Route name'
 							/>
-							<input
-								type='text'
-								className='max-w-14 border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0 md:max-w-16'
-								value={updatedRoute.grade}
-								onChange={handleOnChangeRouteGrade}
-								placeholder='Route grade'
-							/>
+							<div className='max-w-20 md:max-w-32'>
+								<Select
+									options={gradesOptions}
+									defaultValue={
+										{
+											id: updatedRoute.grade,
+											name: updatedRoute.grade,
+										} as unknown as Option
+									}
+									onChange={handleOnChangeRouteGrade}
+								/>
+							</div>
 							<TbArmchair
 								onClick={handleOnChangeRouteSit}
 								className={clsx(
@@ -219,7 +239,12 @@ export const Route = ({
 					) : (
 						<>
 							<div className='flex items-center gap-2'>
-								<TbRoute2 className='-scale-x-[1]' />
+								<TbRoute2
+									className='-scale-x-[1]'
+									style={{
+										color: colorIconRoute,
+									}}
+								/>
 								<span>{route.name}</span>
 								<span className='font-semibold'>{route.grade}</span>
 								{route.sit && <TbArmchair title='Sit' />}
