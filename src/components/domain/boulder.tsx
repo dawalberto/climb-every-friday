@@ -1,6 +1,6 @@
 'use client'
 
-import { useGetElementPositionAndSize } from '@/hooks/UI/use-get-element-position-and-size'
+import { useGetElementPositionAndSize } from '@/hooks/UI'
 import { Route as RouteType } from '@/lib/models/routes'
 import {
 	CustomEvents,

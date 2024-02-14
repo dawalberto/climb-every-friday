@@ -18,7 +18,7 @@ export const DesktopNav = () => {
 	const { generateNavigation } = useNavigation({ navigationType: 'desktop' })
 
 	return (
-		<nav className='mx-auto hidden h-16 max-w-7xl items-center justify-between space-x-4 px-4 text-lg font-semibold tracking-wide md:flex'>
+		<nav className='mx-auto hidden h-16 max-w-7xl items-center justify-between space-x-4 px-4 text-lg font-semibold tracking-wide md:!flex'>
 			<Link
 				href={'/'}
 				className={clsx(interFont.className, navItemAnimationStyle, 'flex-none')}

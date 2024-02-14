@@ -1,6 +1,6 @@
 'use client'
 
-import { useElementClickPositions } from '@/hooks/UI'
+import { FormErrors, useElementClickPositions, useForm } from '@/hooks/UI'
 import { PositionAndSize } from '@/hooks/UI/use-get-element-position-and-size'
 import { Grades, Route as RouteType } from '@/lib/models/routes'
 import { CustomEvents, dispatchCustomEvent } from '@/lib/utils/custom-events'
@@ -19,7 +19,6 @@ import { PiBezierCurveBold } from 'react-icons/pi'
 import { TbArmchair, TbRoute2 } from 'react-icons/tb'
 import { Button, Option, Select, SvgLineDrawer, transformEnumToSelectOptions } from '../UI'
 
-// TODO - create useForm hook to refactor this and avoid the handlers logic here
 // TODO - create RouteEdit and RouteDetails component instead of doing it in the template itself
 
 export const Route = ({
@@ -34,7 +33,24 @@ export const Route = ({
 	const [editMode, setEditMode] = useState(false)
 	const { actionRunning, updateRoute } = useRoutesActions()
 	const { elementRef, handleClick } = useElementClickPositions<HTMLDivElement>()
-	const [updatedRoute, setUpdatedRoute] = useState<RouteType>(route)
+
+	const validateRoute = (formData: Partial<RouteType>) => {
+		// TODO - Route update validations
+		const formErrors: FormErrors<RouteType> = {}
+
+		if (!formData.name) {
+			formErrors.name = 'The name is required'
+		}
+
+		return formErrors
+	}
+
+	const {
+		formData: updatedRoute,
+		handleInputChange,
+		handleInputToggle,
+		setValueOfFieldManually,
+	} = useForm<RouteType>(route, validateRoute)
 
 	const [showHelpMessageInBoulderImage, setShowHelpMessageInBoulderImage] = useState(true)
 
@@ -57,24 +73,8 @@ export const Route = ({
 		}
 	}, [editMode, route, updateRoute, updatedRoute])
 
-	const handleOnChangeRouteName = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setUpdatedRoute((route) => ({ ...route, name: event.target.value }))
-	}
-
 	const handleOnChangeRouteGrade = (routeSelected: Option) => {
-		setUpdatedRoute((route) => ({ ...route, grade: routeSelected.id as unknown as Grades }))
-	}
-
-	const handleOnChangeRouteSit = () => {
-		setUpdatedRoute((route) => ({ ...route, sit: !route.sit }))
-	}
-
-	const handleOnChangeRouteStar = () => {
-		setUpdatedRoute((route) => ({ ...route, star: !route.star }))
-	}
-
-	const handleOnChangeRouteCrossing = () => {
-		setUpdatedRoute((route) => ({ ...route, crossing: !route.crossing }))
+		setValueOfFieldManually({ grade: routeSelected.id as unknown as Grades })
 	}
 
 	const handleOnChangeRouteCoordinates = useCallback(
@@ -86,12 +86,11 @@ export const Route = ({
 			if (!positionClicked) {
 				return
 			}
-			setUpdatedRoute((route) => ({
-				...route,
-				coordinates: [...(route.coordinates ?? []), positionClicked],
-			}))
+			setValueOfFieldManually({
+				coordinates: [...(updatedRoute.coordinates ?? []), positionClicked],
+			})
 		},
-		[editMode, handleClick]
+		[editMode, handleClick, setValueOfFieldManually, updatedRoute]
 	)
 
 	const buttonEditContent = useMemo(() => {
@@ -158,7 +157,7 @@ export const Route = ({
 								className='size-9 text-yellow-950 shadow-md hover:text-white'
 								onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
 									event.stopPropagation()
-									setUpdatedRoute((route) => ({ ...route, coordinates: [] }))
+									setValueOfFieldManually({ ...route, coordinates: [] })
 								}}
 							>
 								<LuEraser />
@@ -196,10 +195,11 @@ export const Route = ({
 						<>
 							<TbRoute2 className='-scale-x-[1]' />
 							<input
+								name='name'
 								type='text'
 								className='max-w-40 border-0 border-b-2 border-amber-300 bg-transparent text-2xl focus:border-amber-600 focus:ring-0 md:max-w-48'
 								value={updatedRoute.name}
-								onChange={handleOnChangeRouteName}
+								onChange={handleInputChange}
 								placeholder='Route name'
 							/>
 							<div className='max-w-20 md:max-w-32'>
@@ -215,21 +215,21 @@ export const Route = ({
 								/>
 							</div>
 							<TbArmchair
-								onClick={handleOnChangeRouteSit}
+								onClick={() => handleInputToggle('sit')}
 								className={clsx(
 									'cursor-pointer transition-all duration-300',
 									updatedRoute.sit ? 'text-amber-500' : 'opacity-40'
 								)}
 							/>
 							<FaRegStar
-								onClick={handleOnChangeRouteStar}
+								onClick={() => handleInputToggle('star')}
 								className={clsx(
 									'cursor-pointer transition-all duration-300',
 									updatedRoute.star ? 'text-amber-500' : 'opacity-40'
 								)}
 							/>
 							<PiBezierCurveBold
-								onClick={handleOnChangeRouteCrossing}
+								onClick={() => handleInputToggle('crossing')}
 								className={clsx(
 									'cursor-pointer transition-all duration-300',
 									updatedRoute.crossing ? 'text-amber-500' : 'opacity-40'
