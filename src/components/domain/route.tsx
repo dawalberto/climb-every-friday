@@ -16,7 +16,7 @@ import { GiMountaintop } from 'react-icons/gi'
 import { HiOutlineInformationCircle, HiPencilSquare, HiXMark } from 'react-icons/hi2'
 import { LuEraser } from 'react-icons/lu'
 import { PiBezierCurveBold } from 'react-icons/pi'
-import { TbArmchair, TbRoute2 } from 'react-icons/tb'
+import { TbArmchair } from 'react-icons/tb'
 import { Button, Option, Select, SvgLineDrawer, transformEnumToSelectOptions } from '../UI'
 
 // TODO - create RouteEdit and RouteDetails component instead of doing it in the template itself
@@ -25,10 +25,12 @@ export const Route = ({
 	route,
 	userCanEdit,
 	positionAndWidthOfBoulderImage,
+	index,
 }: {
 	route: RouteType
 	userCanEdit: boolean
 	positionAndWidthOfBoulderImage: Pick<PositionAndSize, 'top' | 'left' | 'width'>
+	index: number
 }) => {
 	const [editMode, setEditMode] = useState(false)
 	const { actionRunning, updateRoute } = useRoutesActions()
@@ -113,7 +115,7 @@ export const Route = ({
 		const color = getRouteGradeColor(updatedRoute.grade)
 
 		if (color?.length) {
-			return color[1]
+			return color[0]
 		}
 		return 'black'
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -193,7 +195,6 @@ export const Route = ({
 				<div className='flex items-center gap-2'>
 					{editMode ? (
 						<>
-							<TbRoute2 className='-scale-x-[1]' />
 							<input
 								name='name'
 								type='text'
@@ -239,12 +240,12 @@ export const Route = ({
 					) : (
 						<>
 							<div className='flex items-center gap-2'>
-								<TbRoute2
-									className='-scale-x-[1]'
-									style={{
-										color: colorIconRoute,
-									}}
-								/>
+								<div
+									className='flex size-7 items-center justify-center rounded-full text-xl font-semibold text-white'
+									style={{ backgroundColor: colorIconRoute }}
+								>
+									{index + 1}
+								</div>
 								<span>{route.name}</span>
 								<span className='font-semibold'>{route.grade}</span>
 								{route.sit && <TbArmchair title='Sit' />}

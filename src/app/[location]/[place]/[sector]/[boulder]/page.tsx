@@ -1,6 +1,9 @@
 import { NotFound } from '@/components/UI'
 import { Boulder, Routes } from '@/components/domain'
-import { getBoulderByIdentifierName, getRoutesByBoulderId } from '@/services'
+import { RouteSide } from '@/lib/models/routes'
+import { getBoulderByIdentifierName, getRoutesByBoulderIdAndSide } from '@/services'
+
+// TODO - chevrons to the left and right of the boulder title to change boulder side
 
 export default async function BoulderPage({ params }: { params: { boulder: string } }) {
 	const boulderToFind = params.boulder
@@ -11,7 +14,7 @@ export default async function BoulderPage({ params }: { params: { boulder: strin
 	}
 
 	const { name, id, side_a_image_href } = boulder || {}
-	const routes = await getRoutesByBoulderId(id)
+	const routes = await getRoutesByBoulderIdAndSide(id, RouteSide.A)
 
 	return (
 		<div className='relative flex flex-col gap-2'>
