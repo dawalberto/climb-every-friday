@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components'
+import { Button } from '@/components/UI'
 import Image from 'next/image'
 
 export default function Error({
@@ -11,11 +11,11 @@ export default function Error({
 	reset: () => void
 }) {
 	return (
-		<div className='absolute-center h-auto w-full sm:w-1/2'>
+		<div className='absolute-center h-auto w-full md:w-1/2'>
 			<div className='flex-center flex flex-col gap-6'>
 				<Image
-					src='/internal-server-error-500-amico.svg'
-					alt='actors card image'
+					src='/internal-server-error-500.svg'
+					alt='Internal server error'
 					sizes='100%'
 					width={0}
 					height={0}
@@ -25,7 +25,7 @@ export default function Error({
 				<h1 className='text-2xl font-semibold tracking-wide'>
 					Sorry, something went wrong =(
 				</h1>
-				<Button buttonStyle='primary' onClick={reset}>
+				<Button buttonStyle='primary' className='w-full px-4 py-2 text-xl' onClick={reset}>
 					<span>Try again</span>
 				</Button>
 			</div>
