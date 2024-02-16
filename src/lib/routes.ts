@@ -1,4 +1,4 @@
-export const routes: Route[] = [
+export const routes: RouteNavigation[] = [
 	{
 		name: 'Villena',
 		path: '/villena',
@@ -8,7 +8,6 @@ export const routes: Route[] = [
 				name: 'Peña rubia',
 				path: '/penia-rubia',
 				category: 'place',
-
 				subRoutes: [
 					{
 						name: 'Competición Down',
