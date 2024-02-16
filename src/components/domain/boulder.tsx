@@ -74,13 +74,18 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 					priority
 				/>
 
-				{routes.map((route) => (
-					<SvgLineDrawer
-						key={route.id}
-						coordinates={route.coordinates ?? []}
-						colors={getRouteGradeColorForSVGDrawing(route.grade)}
-					/>
-				))}
+				{routes.map((route, index) => {
+					const lineNumber = route.coordinates?.length ? { lineNumber: index + 1 } : {}
+
+					return (
+						<SvgLineDrawer
+							key={route.id}
+							{...lineNumber}
+							coordinates={route.coordinates ?? []}
+							colors={getRouteGradeColorForSVGDrawing(route.grade)}
+						/>
+					)
+				})}
 			</div>
 		</>
 	)

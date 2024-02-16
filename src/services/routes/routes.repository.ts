@@ -4,10 +4,13 @@ import { Route } from '@/lib/models/routes'
 import { sql } from '@vercel/postgres'
 import { revalidatePath } from 'next/cache'
 
-export const getRoutesByBoulderId = async (boulderId: Pick<Boulder, 'id'>['id']) => {
+export const getRoutesByBoulderIdAndSide = async (
+	boulderId: Pick<Route, 'boulder_id'>['boulder_id'],
+	routeSide: Pick<Route, 'side'>['side']
+) => {
 	try {
 		const { rows } =
-			await sql<Route>`SELECT * FROM routes WHERE boulder_id = ${boulderId} ORDER BY grade DESC;`
+			await sql<Route>`SELECT * FROM routes WHERE boulder_id = ${boulderId} AND side = ${routeSide} ORDER BY grade DESC;`
 		return rows
 	} catch (error) {
 		throw new Error('🦍 ❌ SQL error', { cause: error })

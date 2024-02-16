@@ -2,12 +2,12 @@
 
 import { PositionAndSize } from '@/hooks/UI/use-get-element-position-and-size'
 import { useUserRole } from '@/hooks/domain'
-import { Route, RouteSide } from '@/lib/models/routes'
+import { Route as RouteType } from '@/lib/models/routes'
 import { CustomEvents, subscribe, unsubscribe } from '@/lib/utils/custom-events'
 import { useCallback, useEffect, useState } from 'react'
-import { Route as RouteComponent } from './route'
+import { Route } from './route'
 
-export const Routes = ({ routes }: { routes: Route[] }) => {
+export const Routes = ({ routes }: { routes: RouteType[] }) => {
 	const { userIsAdmin } = useUserRole()
 	const [positionAndWidthOfBoulderImage, setPositionAndWidthOfBoulderImage] = useState<
 		Pick<PositionAndSize, 'top' | 'left' | 'width'>
@@ -38,16 +38,15 @@ export const Routes = ({ routes }: { routes: Route[] }) => {
 
 	return (
 		<div className='mt-4 flex-col space-y-3'>
-			{routes
-				.filter((route) => route.side === RouteSide.A)
-				.map((route) => (
-					<RouteComponent
-						key={route.id}
-						route={route}
-						userCanEdit={userIsAdmin}
-						positionAndWidthOfBoulderImage={positionAndWidthOfBoulderImage}
-					/>
-				))}
+			{routes.map((route, index) => (
+				<Route
+					key={route.id}
+					route={route}
+					index={index}
+					userCanEdit={userIsAdmin}
+					positionAndWidthOfBoulderImage={positionAndWidthOfBoulderImage}
+				/>
+			))}
 		</div>
 	)
 }
