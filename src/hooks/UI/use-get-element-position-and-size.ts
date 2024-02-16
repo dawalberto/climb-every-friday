@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export const useGetElementPositionAndSize = ({
 	updateOnScroll = true,
@@ -19,7 +19,7 @@ export const useGetElementPositionAndSize = ({
 		width: 0,
 	})
 
-	const updatePositionAndSize = () => {
+	const updatePositionAndSize = useCallback(() => {
 		const elementPositionAndSize = elementRef.current?.getBoundingClientRect()
 		if (elementPositionAndSize) {
 			setPositionAndSize({
@@ -31,7 +31,7 @@ export const useGetElementPositionAndSize = ({
 				width: elementPositionAndSize.width,
 			})
 		}
-	}
+	}, [])
 
 	useEffect(() => {
 		updatePositionAndSize()
@@ -50,6 +50,7 @@ export const useGetElementPositionAndSize = ({
 				window.removeEventListener('scroll', updatePositionAndSize)
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return { elementToGetPositionAndSizeRef: elementRef, positionAndSize }

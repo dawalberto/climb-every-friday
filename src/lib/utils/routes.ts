@@ -5,17 +5,7 @@ export const getRouteGradeColor = (grade: Pick<Route, 'grade'>['grade']) => {
 	return gradesWithColors.find((gradeWithColor) => gradeWithColor.grade === grade)?.colors
 }
 
-export const getRouteGradeColorForSVGDrawing = (
-	routeGrade: Route | Pick<Route, 'grade'>['grade']
-) => {
-	let grade: string
-
-	if (typeof routeGrade === 'string') {
-		grade = routeGrade
-	} else {
-		grade = routeGrade.grade
-	}
-
+export const getRouteGradeColorForSVGDrawing = (grade: Pick<Route, 'grade'>['grade']) => {
 	const colors = getRouteGradeColor(grade)
 	if (colors) {
 		return {
