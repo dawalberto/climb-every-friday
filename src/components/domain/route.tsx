@@ -121,6 +121,10 @@ export const Route = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [updateRoute])
 
+	const handleOnRouteInfoClick = useCallback(() => {
+		dispatchCustomEvent(CustomEvents.ON_ROUTE_INFO_CLICK, route.id)
+	}, [route])
+
 	return (
 		<>
 			{editMode && (
@@ -239,7 +243,10 @@ export const Route = ({
 						</>
 					) : (
 						<>
-							<div className='flex items-center gap-2'>
+							<div
+								className='flex cursor-pointer items-center gap-2'
+								onClick={handleOnRouteInfoClick}
+							>
 								<div
 									className='flex size-7 items-center justify-center rounded-full text-xl font-semibold text-white'
 									style={{ backgroundColor: colorIconRoute }}
