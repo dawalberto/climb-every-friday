@@ -15,20 +15,27 @@ export const SvgLineDrawer = ({
 	}
 	lineNumber?: number
 }) => {
-	const lineNumberElement =
-		lineNumber && coordinates.length ? (
+	const lineNumberElement = (position: 'start' | 'end') => {
+		if (!lineNumber || !coordinates.length) {
+			return null
+		}
+		const positionToShow =
+			position === 'start' ? coordinates[0] : coordinates[coordinates.length - 1]
+
+		return (
 			<div
-				className='absolute flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xl font-semibold text-white'
+				className='absolute flex size-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-lg font-semibold text-white md:size-7 md:text-xl'
 				style={{
 					position: 'absolute',
-					left: `${coordinates[0].x}%`,
-					top: `${coordinates[0].y}%`,
+					left: `${positionToShow.x}%`,
+					top: `${positionToShow.y}%`,
 					backgroundColor: colors.circleColor,
 				}}
 			>
 				{lineNumber}
 			</div>
-		) : null
+		)
+	}
 
 	return (
 		<>
@@ -65,7 +72,8 @@ export const SvgLineDrawer = ({
 						return null
 					})}
 			</svg>
-			{lineNumberElement}
+			{lineNumberElement('start')}
+			{lineNumberElement('end')}
 		</>
 	)
 }
