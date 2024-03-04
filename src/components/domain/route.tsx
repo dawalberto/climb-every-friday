@@ -26,11 +26,13 @@ export const Route = ({
 	userCanEdit,
 	positionAndWidthOfBoulderImage,
 	index,
+	opacity,
 }: {
 	route: RouteType
 	userCanEdit: boolean
 	positionAndWidthOfBoulderImage: Pick<PositionAndSize, 'top' | 'left' | 'width'>
 	index: number
+	opacity: number
 }) => {
 	const [editMode, setEditMode] = useState(false)
 	const { actionRunning, updateRoute } = useRoutesActions()
@@ -246,6 +248,7 @@ export const Route = ({
 							<div
 								className='flex cursor-pointer items-center gap-2'
 								onClick={handleOnRouteInfoClick}
+								style={{ opacity: opacity }}
 							>
 								<div
 									className='flex size-7 items-center justify-center rounded-full text-xl font-semibold text-white'
