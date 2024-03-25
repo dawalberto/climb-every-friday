@@ -11,7 +11,7 @@ export const routes: RouteNavigation[] = [
 				subRoutes: [
 					{
 						name: 'Competición Down',
-						path: '/competicion-down',
+						path: '/competition-down',
 						category: 'sector',
 						subRoutes: [
 							{

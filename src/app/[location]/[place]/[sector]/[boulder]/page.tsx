@@ -19,7 +19,7 @@ export default async function BoulderPage({ params }: { params: { boulder: strin
 	return (
 		<div className='relative flex flex-col gap-2'>
 			<Boulder name={name} sideAImageHref={side_a_image_href} routes={routes} />
-			<Routes routes={routes} />
+			<Routes routes={routes} boulderSideAImageHref={side_a_image_href} />
 		</div>
 	)
 }

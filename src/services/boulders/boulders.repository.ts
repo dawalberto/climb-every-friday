@@ -14,3 +14,15 @@ export const getBoulderByIdentifierName = async (
 		throw new Error('🦍 ❌ SQL error', { cause: error })
 	}
 }
+
+export const getBouldersBySectorId = async (sectorId: Pick<Boulder, 'sector_id'>['sector_id']) => {
+	try {
+		const { rows } = await sql<Boulder>`SELECT * FROM boulders WHERE sector_id = ${sectorId};`
+		if (rows.length) {
+			return rows
+		}
+		return null
+	} catch (error) {
+		throw new Error('🦍 ❌ SQL error', { cause: error })
+	}
+}

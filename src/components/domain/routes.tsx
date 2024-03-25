@@ -7,7 +7,13 @@ import { CustomEvents, subscribe, unsubscribe } from '@/lib/utils/custom-events'
 import { useCallback, useEffect, useState } from 'react'
 import { Route } from './route'
 
-export const Routes = ({ routes }: { routes: RouteType[] }) => {
+export const Routes = ({
+	routes,
+	boulderSideAImageHref,
+}: {
+	routes: RouteType[]
+	boulderSideAImageHref: Pick<Boulder, 'side_a_image_href'>['side_a_image_href']
+}) => {
 	const { userIsAdmin } = useUserRole()
 	const [positionAndWidthOfBoulderImage, setPositionAndWidthOfBoulderImage] = useState<
 		Pick<PositionAndSize, 'top' | 'left' | 'width'>
@@ -63,6 +69,7 @@ export const Routes = ({ routes }: { routes: RouteType[] }) => {
 					key={route.id}
 					opacity={!clickedRouteId || clickedRouteId === route.id ? 1 : 0.3}
 					route={route}
+					boulderSideAImageHref={boulderSideAImageHref}
 					index={index}
 					userCanEdit={userIsAdmin}
 					positionAndWidthOfBoulderImage={positionAndWidthOfBoulderImage}

@@ -11,3 +11,10 @@ type RouteNavigation = {
 	category?: 'location' | 'place' | 'sector' | 'boulder'
 	subRoutes?: RouteNavigation[]
 }
+
+type PageParams = {
+	location: string
+	place: string
+	sector: string
+	boulder: string
+}

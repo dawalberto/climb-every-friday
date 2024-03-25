@@ -21,12 +21,14 @@ import { Button, Option, Select, SvgLineDrawer, transformEnumToSelectOptions } f
 
 export const Route = ({
 	route,
+	boulderSideAImageHref,
 	userCanEdit,
 	positionAndWidthOfBoulderImage,
 	index,
 	opacity = 1,
 }: {
 	route: RouteType
+	boulderSideAImageHref: Pick<Boulder, 'side_a_image_href'>['side_a_image_href']
 	userCanEdit: boolean
 	positionAndWidthOfBoulderImage: Pick<PositionAndSize, 'top' | 'left' | 'width'>
 	index: number
@@ -142,7 +144,7 @@ export const Route = ({
 						style={{ position: 'relative' }}
 					>
 						<Image
-							src={`/boulders/tiburon.webp`}
+							src={`/boulders/${boulderSideAImageHref}`}
 							alt='Page not found'
 							sizes='100%'
 							width={0}
