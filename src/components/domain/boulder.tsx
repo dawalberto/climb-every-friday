@@ -23,6 +23,7 @@ type BoulderOptions = {
 
 export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 	const [showBoulderImage, setShowBoulderImage] = useState(true)
+	const [clickedRouteId, setClickedRouteId] = useState<string>()
 	const { elementToGetPositionAndSizeRef, positionAndSize } = useGetElementPositionAndSize({
 		updateOnScroll: true,
 	})
@@ -34,6 +35,18 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 	const handleOnRouteOnEditModeOff = useCallback(() => {
 		setShowBoulderImage(true)
 	}, [])
+
+	const handleOnRouteClick = useCallback(
+		(event: Event) => {
+			const eventClickedLineId = (event as CustomEvent<string>).detail
+			if (eventClickedLineId === clickedRouteId) {
+				setClickedRouteId(undefined)
+			} else {
+				setClickedRouteId(eventClickedLineId)
+			}
+		},
+		[clickedRouteId]
+	)
 
 	useEffect(() => {
 		subscribe(CustomEvents.ON_ROUTE_MODE_EDIT_ON, handleOnRouteOnEditModeOn)
@@ -52,6 +65,13 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 			)
 		}
 	}, [positionAndSize])
+
+	useEffect(() => {
+		subscribe(CustomEvents.ON_ROUTE_INFO_CLICK, handleOnRouteClick)
+		return () => {
+			unsubscribe(CustomEvents.ON_ROUTE_INFO_CLICK, handleOnRouteClick)
+		}
+	}, [handleOnRouteClick])
 
 	return (
 		<>
@@ -80,6 +100,7 @@ export const Boulder = ({ name, routes, sideAImageHref }: BoulderOptions) => {
 					return (
 						<SvgLineDrawer
 							key={route.id}
+							opacity={!clickedRouteId || clickedRouteId === route.id ? 1 : 0.3}
 							{...lineNumber}
 							coordinates={route.coordinates ?? []}
 							colors={getRouteGradeColorForSVGDrawing(route.grade)}

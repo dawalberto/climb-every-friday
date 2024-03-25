@@ -19,18 +19,18 @@ import { PiBezierCurveBold } from 'react-icons/pi'
 import { TbArmchair } from 'react-icons/tb'
 import { Button, Option, Select, SvgLineDrawer, transformEnumToSelectOptions } from '../UI'
 
-// TODO - create RouteEdit and RouteDetails component instead of doing it in the template itself
-
 export const Route = ({
 	route,
 	userCanEdit,
 	positionAndWidthOfBoulderImage,
 	index,
+	opacity = 1,
 }: {
 	route: RouteType
 	userCanEdit: boolean
 	positionAndWidthOfBoulderImage: Pick<PositionAndSize, 'top' | 'left' | 'width'>
 	index: number
+	opacity?: number
 }) => {
 	const [editMode, setEditMode] = useState(false)
 	const { actionRunning, updateRoute } = useRoutesActions()
@@ -120,6 +120,10 @@ export const Route = ({
 		return 'black'
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [updateRoute])
+
+	const handleOnRouteInfoClick = useCallback(() => {
+		dispatchCustomEvent(CustomEvents.ON_ROUTE_INFO_CLICK, route.id)
+	}, [route])
 
 	return (
 		<>
@@ -239,7 +243,11 @@ export const Route = ({
 						</>
 					) : (
 						<>
-							<div className='flex items-center gap-2'>
+							<div
+								className='flex cursor-pointer items-center gap-2'
+								onClick={handleOnRouteInfoClick}
+								style={{ opacity: opacity }}
+							>
 								<div
 									className='flex size-7 items-center justify-center rounded-full text-xl font-semibold text-white'
 									style={{ backgroundColor: colorIconRoute }}
