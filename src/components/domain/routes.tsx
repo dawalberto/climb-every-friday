@@ -12,6 +12,7 @@ export const Routes = ({ routes }: { routes: RouteType[] }) => {
 	const [positionAndWidthOfBoulderImage, setPositionAndWidthOfBoulderImage] = useState<
 		Pick<PositionAndSize, 'top' | 'left' | 'width'>
 	>({ top: 0, left: 0, width: 0 })
+	const [clickedRouteId, setClickedRouteId] = useState<string>()
 
 	const handleOnPositionAndSizeOfBoulderImageCalculated = useCallback((event: Event) => {
 		const positionAndSize = (event as CustomEvent<PositionAndSize>).detail
@@ -36,11 +37,31 @@ export const Routes = ({ routes }: { routes: RouteType[] }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
+	const handleOnRouteClick = useCallback(
+		(event: Event) => {
+			const eventClickedLineId = (event as CustomEvent<string>).detail
+			if (eventClickedLineId === clickedRouteId) {
+				setClickedRouteId(undefined)
+			} else {
+				setClickedRouteId(eventClickedLineId)
+			}
+		},
+		[clickedRouteId]
+	)
+
+	useEffect(() => {
+		subscribe(CustomEvents.ON_ROUTE_INFO_CLICK, handleOnRouteClick)
+		return () => {
+			unsubscribe(CustomEvents.ON_ROUTE_INFO_CLICK, handleOnRouteClick)
+		}
+	}, [handleOnRouteClick])
+
 	return (
 		<div className='mt-4 flex-col space-y-3'>
 			{routes.map((route, index) => (
 				<Route
 					key={route.id}
+					opacity={!clickedRouteId || clickedRouteId === route.id ? 1 : 0.3}
 					route={route}
 					index={index}
 					userCanEdit={userIsAdmin}

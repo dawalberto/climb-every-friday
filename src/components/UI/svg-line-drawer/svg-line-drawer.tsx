@@ -1,4 +1,7 @@
+'use client'
+
 import { Position } from '@/hooks/UI'
+import { useCallback } from 'react'
 
 export const SvgLineDrawer = ({
 	coordinates,
@@ -7,6 +10,7 @@ export const SvgLineDrawer = ({
 		lineColor: '#F59E0B',
 	},
 	lineNumber,
+	opacity = 1,
 }: {
 	coordinates: Position[]
 	colors?: {
@@ -14,25 +18,46 @@ export const SvgLineDrawer = ({
 		lineColor?: string
 	}
 	lineNumber?: number
+	opacity?: number
 }) => {
-	const lineNumberElement =
-		lineNumber && coordinates.length ? (
-			<div
-				className='absolute flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xl font-semibold text-white'
-				style={{
-					position: 'absolute',
-					left: `${coordinates[0].x}%`,
-					top: `${coordinates[0].y}%`,
-					backgroundColor: colors.circleColor,
-				}}
-			>
-				{lineNumber}
-			</div>
-		) : null
+	const lineNumberElement = useCallback(
+		(position: 'start' | 'end') => {
+			if (!lineNumber || !coordinates.length) {
+				return null
+			}
+			const positionToShow =
+				position === 'start' ? coordinates[0] : coordinates[coordinates.length - 1]
+
+			return (
+				<div
+					className='absolute flex size-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-lg font-semibold text-white md:size-7 md:text-xl'
+					style={{
+						position: 'absolute',
+						left: `${positionToShow.x}%`,
+						top: `${positionToShow.y}%`,
+						backgroundColor: colors.circleColor,
+						opacity,
+					}}
+				>
+					{lineNumber}
+				</div>
+			)
+		},
+		[colors, coordinates, lineNumber, opacity]
+	)
 
 	return (
 		<>
-			<svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+			<svg
+				style={{
+					position: 'absolute',
+					top: 0,
+					left: 0,
+					width: '100%',
+					height: '100%',
+					opacity: opacity,
+				}}
+			>
 				{coordinates.length > 0 &&
 					coordinates.map(({ x, y }, index) => {
 						return (
@@ -65,7 +90,8 @@ export const SvgLineDrawer = ({
 						return null
 					})}
 			</svg>
-			{lineNumberElement}
+			{lineNumberElement('start')}
+			{lineNumberElement('end')}
 		</>
 	)
 }
